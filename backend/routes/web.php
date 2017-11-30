@@ -20,6 +20,7 @@ Route::get('/contact', function () {
     return view('contact');
 });
 
-Route::get('details/{id}', 'OrganismController@get_details');
-
 Route::resource('organisms', 'OrganismController');
+
+Route::get('details', 'OrganismController@get_details');
+

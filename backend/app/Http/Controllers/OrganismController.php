@@ -85,7 +85,10 @@ class OrganismController extends Controller
         //
     }
 
-    public function get_details($id) {
-        return view('organisms/details', compact('id'));
+    public function get_details() {
+        $organisms = ['Zebra', 'Crocodile', 'Elephant', 'Lion'];
+        return view('organisms/details', compact('organisms'));
     }
+
+
 }
