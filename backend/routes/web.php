@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrganismController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,3 +15,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/contact', function () {
+    return view('contact');
+});
+
+Route::get('details/{id}', 'OrganismController@get_details');
+
+Route::resource('organisms', 'OrganismController');

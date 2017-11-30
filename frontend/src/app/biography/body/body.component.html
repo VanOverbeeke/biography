@@ -1,0 +1,53 @@
+<h2>Body.</h2>
+<label>Adding stuff to the database</label>
+<br>
+
+<input
+    type="text"
+    class="form-control"
+    [(ngModel)]="key">
+<input
+    type="text"
+    class="form-control"
+    [(ngModel)]="value">
+<button
+    class="btn btn-primary"
+    [disabled]="checkBothButtons()"
+    (click)="pushData(key,value,d)">
+    Add Item
+</button>
+<button
+    class="btn btn-primary"
+    (click)="randData(d)">
+    Add Random
+</button>
+
+<br>
+
+<input
+    type="text"
+    class="form-control"
+    [(ngModel)]="delKey">
+<button
+    class="btn btn-primary"
+    [disabled]="!checkKey(delKey, d)"
+    (click)="delData(delKey, d)">
+    Remove Item
+</button>
+<button
+    class="btn btn-primary"
+    [disabled]="Object.keys(d).length === 0"
+    (click)="delKey = printData(d)[0]">
+    Select Existing Key
+</button>
+
+<br>
+
+<p>List status: {{ Object.keys(d) }}</p>
+<div *ngFor="let i of printData(d)">{{i}}</div>
+<p>Most recently added entry: {{ lastOne }}</p>
+<h3>Currently available elements:</h3>
+<p *ngIf="checkLength(d)">Data list is longer than three items!</p>
+<p [ngStyle]="{'color': getColor(), 'font-weight': 'bold'}">CHECK</p>
+
+<div *ngFor="let i of printData(d)">{{i}}</div>
