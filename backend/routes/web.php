@@ -1,26 +1,29 @@
 <?php
 
-use App\Http\Controllers\OrganismController;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Http\Controllers\SpeciesController;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('details/{sortBy}', [
+    'uses' => 'Biography\SpeciesController@show_table',
+    'as' => 'show_table'
+]);
+
+
+Route::get('species/create', [
+    'uses' => 'Biography\SpeciesController@create',
+    'as' => 'create_species'
+]);
+
+Route::get('species', [
+    'uses' => 'Biography\SpeciesController@store',
+    'as' => 'store_species'
+]);
+
 Route::get('/contact', function () {
     return view('contact');
 });
-
-Route::resource('organisms', 'OrganismController');
-
-Route::get('details', 'OrganismController@get_details');
-

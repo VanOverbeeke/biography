@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOrganismsTable extends Migration
+class CreateBiomesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreateOrganismsTable extends Migration
      */
     public function up()
     {
-        Schema::create('organisms', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('biomes')) {
+            Schema::create('biomes', function (Blueprint $table) {
+                $table->increments('id');
+                $table->timestamps();
+                $table->string('name');
+            });
+        }
     }
 
     /**
@@ -26,6 +29,6 @@ class CreateOrganismsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('organisms');
+        Schema::dropIfExists('biomes');
     }
 }
