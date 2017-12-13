@@ -6,10 +6,8 @@
  * Time: 11:00
  */
 
-namespace App\Http\Models;
+namespace App\Models;
 
-
-use App\Biome;
 use Illuminate\Database\Eloquent\Model;
 
 class Species extends Model
@@ -30,7 +28,7 @@ class Species extends Model
     }
 
     public function biomes() {
-        return $this->belongsToMany(Biome::class);
+        return $this->belongsToMany(Biome::class, 'biome_species', 'species_id', 'biome_id');
     }
 
 }

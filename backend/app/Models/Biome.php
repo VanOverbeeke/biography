@@ -1,8 +1,7 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\Http\Models\Species;
 use Illuminate\Database\Eloquent\Model;
 
 class Biome extends Model
@@ -13,5 +12,9 @@ class Biome extends Model
 
     public function species() {
         return $this->belongsToMany(Species::class);
+    }
+
+    public function hasSpecies($species_id) {
+        return $this->species()->where('species_id', '=', $species_id)->exists();
     }
 }

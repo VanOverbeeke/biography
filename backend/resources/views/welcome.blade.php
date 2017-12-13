@@ -5,14 +5,18 @@
 @stop
 
 @section('header')
-    <i>"Biography"</i>
+    Biography
 @stop
 
 @section('body')
-    <a href="/details/id">Species Table</a>
-    <br><br><hr><br>
-    <h3>Options</h3>
-    <br>
-    <a href="/show">Browse Species</a>
-    <a href="/biomes">Browse Biomes</a>
+    <h1>Genus</h1>
+    <a href="/genus/index">Browse</a>
+    <a href="/genus/create">New</a>
+
+    <br><br><br><br>
+
+    <h1>Species</h1>
+    <a href="/species/index">Browse</a>
+    <a href="/species/create">New</a>
+    <a href="/species/edit">Edit</a>
 @stop

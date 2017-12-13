@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-use App\Http\Models\Genus;
+use App\Models\Genus;
 
 class GenusSeeder extends Seeder
 {
