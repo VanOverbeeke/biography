@@ -9,8 +9,8 @@
 @stop
 
 @section('body')
-    <form id="species" action="/species" method="get">
-
+    <form id="species" action="/species/create" method="post">
+        {{ csrf_field() }}
         <div class="row flex-center">
             <h2>Species</h2>
         </div>
@@ -18,11 +18,7 @@
             <div class="col-lg-2">
                 <label for="genus">Genus name or <a href="/genus/create">create new</a>
                 </label>
-                <select class="form-control species" id="genus" name="genus_id"  value="{{ old('genus_id') }}">
-                    @foreach(\App\Models\Genus::select(['id', 'name'])->get()->toArray() as $genus)
-                        <option value="{{$genus['id']}}">{{$genus['name']}}</option>
-                    @endforeach
-                </select>
+                {{ Form::select('genus_id', $genus_array, ['class' => 'form-control', 'onchange' => 'getSpecies(value)']) }}
             </div>
             <div class="col-lg-2">
                <label for="species">Species name</label>
@@ -58,7 +54,7 @@
         </div>
 
         <div class="row flex-center">
-            <h2>Habitat</h2>
+            <h2>Biomes</h2>
         </div>
         <div class="row flex-center">
             <div class ="form-group col-lg-5">

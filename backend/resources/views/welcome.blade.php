@@ -10,13 +10,13 @@
 
 @section('body')
     <h1>Genus</h1>
-    <a href="/genus/index">Browse</a>
+    <a href="/genus/index">Index</a>
     <a href="/genus/create">New</a>
 
     <br><br><br><br>
 
     <h1>Species</h1>
-    <a href="/species/index">Browse</a>
-    <a href="/species/create">New</a>
-    <a href="/species/edit">Edit</a>
+    <a href="/species/index">Index</a>
+    <a href="/species/create">Create</a>
+    <a href="/species/search">Search&Edit</a>
 @stop

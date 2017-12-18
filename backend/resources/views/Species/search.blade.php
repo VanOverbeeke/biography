@@ -5,7 +5,7 @@
 @stop
 
 @section('header')
-    Find
+    Search
 @stop
 
 @section('body')
@@ -29,6 +29,25 @@
                 }
             });
         }
+        function printSpecies(speciesID) {
+            var btn = $('#buttons');
+            btn.empty();
+            btn.append(
+                '<br><br><br><br>'
+            );
+            btn.append(
+                '<div class="col-md-1">' +
+                '<form action="/species/index/' + speciesID + '">' +
+                '<button type="submit" value="Submit" class="btn btn-primary">View</button>' +
+                '</div></form>'
+            );
+            btn.append(
+                '<div class="col-md-1">' +
+                '<form action="/species/edit/' + speciesID + '">' +
+                '<button type="submit" value="Submit" class="btn btn-primary">Edit</button>' +
+                '</div>'
+            );
+        }
     </script>
 
     <form id="species" action="/species/find" method="get">
@@ -48,13 +67,12 @@
             </div>
             <div class="col-md-3">
                 <label for="species">Species name</label>
-                <select class="form-control species" id="species_id" name="species_id">
+                <select class="form-control species" id="species_id" name="species_id" onchange=printSpecies(value);>
                     <option value="">Select genus first</option>
                 </select>
             </div>
         </div>
-        <div class="row flex-center">
-            <button type="submit" value="submit" class="btn btn-primary">Submit</button>
+        <div class="row flex-center" id="buttons">
         </div>
     </form>
 @stop

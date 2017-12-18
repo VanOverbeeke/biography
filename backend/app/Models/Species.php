@@ -23,6 +23,7 @@ class Species extends Model
         'weight'
     ];
 
+
     public function genus() {
         return $this->belongsTo(Genus::class);
     }

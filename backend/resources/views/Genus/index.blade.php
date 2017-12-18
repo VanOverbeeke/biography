@@ -72,6 +72,7 @@
     <table id="table" class="table flex-center">
         <thead>
         <tr>
+            <th> Delete </th>
             <th> Genus </th>
             <th> Species </th>
         </tr>
@@ -79,6 +80,10 @@
         <tbody>
         @foreach($genus as $genu)
             <tr>
+                <td>{{ Form::open(['route' => ['genus.delete', $genu->id], 'method' => 'delete']) }}
+                    <button type="submit" class="btn btn-danger">X</button>
+                    {{Form::close()}}
+                </td>
                 <td><a class="genus">{{$genu->name}}</a></td>
                 <td>
                     @foreach ($genu->species as $specie)

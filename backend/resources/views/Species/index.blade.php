@@ -11,10 +11,10 @@
 @section('body')
     <div id="controls">
         <div class="row flex-center">
-            <div class="col-lg-3">
+            <div class="col-lg-4">
                 <p>Sort by</p>
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-2">
                 <p>Filter by Biome</p>
             </div>
             <div class="col-lg-3">
@@ -22,8 +22,8 @@
             </div>
         </div>
         <div class="row flex-center">
-            <div class="col-lg-3 flex-center">
-                @foreach([['id','ID'],['age','Age'],['size','Size'],['weight','Weight']] as $col)
+            <div class="col-lg-4 flex-center">
+                @foreach([['id','ID'],['genus_id','Genus'],['age','Age'],['size','Size'],['weight','Weight']] as $col)
                     <a href="{{route('species.index', [
                         'sortBy'=>$col[0],
                         'filterBy'=>$filterBy])}}"
@@ -33,7 +33,7 @@
                     </a>
                 @endforeach
             </div>
-            <div class="col-lg-3 flex-center">
+            <div class="col-lg-2 flex-center">
                 <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ (count($name = App\Models\Biome::where('id','=',$filterBy)->get(['name'])) > 0 ) ? App\Models\Biome::where('id','=',$filterBy)->get(['name'])[0]['name'] : 'All'}}
                 </button>
@@ -48,7 +48,8 @@
                         <a  class="dropdown-item"
                             href="{{route('species.index', [
                                'sortBy'=>$sortBy,
-                               'filterBy'=>$biome['id'] ])}}">
+                               'filterBy'=>$biome['id']
+                            ])}}">
                         {{$biome['name']}}
                         </a>
                     @endforeach
@@ -68,6 +69,7 @@
     <table id="table" class="table flex-center">
         <thead>
         <tr>
+            <th> Delete </th>
             <th> Species </th>
             <th> Age (y) </th>
             <th> Max size (m) </th>
@@ -78,6 +80,10 @@
         <tbody>
         @foreach($species as $specie)
             <tr>
+                <td>{{ Form::open(['route' => ['species.delete', $specie->id], 'method' => 'delete']) }}
+                    <button type="submit" class="btn btn-danger">X</button>
+                    {{Form::close()}}
+                </td>
                 <td><a href="{{$specie->wiki}}" class="species">{{$specie->genus->name}} {{$specie->name}}</a></td>
                 <td> {{$specie->age}} </td>
                 <td> {{$specie->size}} </td>

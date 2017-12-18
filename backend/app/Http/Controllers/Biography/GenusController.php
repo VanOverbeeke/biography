@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Biography;
 
+use App\Http\Requests\StoreGenus;
 use App\Models\Genus;
+use App\Repositories\Biography\Genus\GenusRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -38,7 +40,7 @@ class GenusController extends Controller
      */
     public function create()
     {
-        return view('/genus/create');
+        return view('genus.create');
     }
 
     /**
@@ -47,13 +49,10 @@ class GenusController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreGenus $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'string|required|unique:genus|max:50',
-        ]);
         $genus = new Genus;
-        $genus->name = $validatedData->get('name');
+        $genus->name = $request->get('name');
         $genus->save();
         return response('Genus addition success!', 200)
             ->header('Content-Type', 'text/plain');
@@ -99,8 +98,13 @@ class GenusController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete($id)
     {
-        //
+        $genusRepository = new GenusRepository();
+        $returnStatus =  $genusRepository->delete($id);
+        if ($returnStatus) {
+            return response('Genus deletion success!', 200)
+                ->header('Content-Type', 'text/plain');
+        }
     }
 }
