@@ -64,21 +64,15 @@ Route::post('species/create', [
     'as' => 'species.create'
 ]);
 
-Route::get('species/edit', [
+Route::get('species/edit/{species_id}', [
     'uses' => 'Biography\SpeciesController@edit',
     'as' => 'species.edit'
 ]);
 
-Route::get('species/edit/{species_id}', [
-    'uses' => 'Biography\SpeciesController@edit',
-    'as' => 'species.editOne'
-]);
-
-Route::post('species/update', [
+Route::get('species/update/{id}', [
     'uses' => 'Biography\SpeciesController@update',
     'as' => 'species.update'
 ]);
-
 
 Route::delete('species/delete/{species_id}', [
     'uses' => 'Biography\SpeciesController@delete',
@@ -90,9 +84,10 @@ Route::get('species/{id}', [
     'as' => 'species.store'
 ]);
 
+///////////////////////////////////  Functions
 
 Route::get('/getSpecies', [
-    'uses' => 'Biography\SpeciesController@find',
+    'uses' => 'Biography\GenusController@findSpecies',
     'as' => 'species.find'
 ]);
 
@@ -106,10 +101,7 @@ Route::get('/getMetrics', [
     'as' => 'species.metrics'
 ]);
 
-Route::get('/tester/{int}', [
-    'uses' => 'tester@tester',
-    'as' => 'tester'
-]);
+/////////////////////////////////    General
 
 Route::get('/contact', function () {
     return view('contact');

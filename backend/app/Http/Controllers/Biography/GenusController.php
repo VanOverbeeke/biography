@@ -7,6 +7,8 @@ use App\Models\Genus;
 use App\Repositories\Biography\Genus\GenusRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Http\Response;
 
 class GenusController extends Controller
 {
@@ -106,5 +108,18 @@ class GenusController extends Controller
             return response('Genus deletion success!', 200)
                 ->header('Content-Type', 'text/plain');
         }
+    }
+
+    public function findSpecies()
+    {
+        $input = Input::get('genus_id');
+        if ($input === 'None') {
+            dd('NONE passed to findSpecies in GenusController');
+        } else {
+            $genus = Genus::find($input);
+            $species = $genus->species();
+        }
+        $species = $species->get(['id','name']);
+        return $species;
     }
 }

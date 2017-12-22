@@ -69,19 +69,20 @@
     <table id="table" class="table flex-center">
         <thead>
         <tr>
-            <th> Delete </th>
+            <th> Edit </th>
             <th> Species </th>
             <th> Age (y) </th>
             <th> Max size (m) </th>
             <th> Max weight (kg) </th>
             <th> Biome </th>
+            <th> 18S rRNA </th>
         </tr>
         </thead>
         <tbody>
         @foreach($species as $specie)
             <tr>
-                <td>{{ Form::open(['route' => ['species.delete', $specie->id], 'method' => 'delete']) }}
-                    <button type="submit" class="btn btn-danger">X</button>
+                <td>{{ Form::open(['route' => ['species.edit', $specie->id], 'method' => 'get']) }}
+                    <button type="submit" class="btn btn-success">Edit</button>
                     {{Form::close()}}
                 </td>
                 <td><a href="{{$specie->wiki}}" class="species">{{$specie->genus->name}} {{$specie->name}}</a></td>
@@ -93,6 +94,7 @@
                         {{$j->name}}{{ ($loop->last) ? '' : ',' }}
                     @endforeach
                 </td>
+                <td> {{ $specie->rrna }} </td>
             </tr>
         @endforeach
         </tbody>

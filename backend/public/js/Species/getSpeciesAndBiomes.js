@@ -1,7 +1,12 @@
 $(function () {
+    // $("select#species_id").onload();
+    // $("select#biomes").onload();
+    // $("select#metrics").onload();
     $("select#species_id").change();
     $("select#biomes").change();
     $("select#metrics").change();
+console.log(window.location);
+    getBiomes('<?php echo $species_id; ?>');
 });
 
 function getSpecies(genusID) {
@@ -28,8 +33,8 @@ function getBiomes(speciesID) {
     $.ajax({
         type: "GET",
         url: "/getBiomes",
-        data: {'species_id':speciesID},
-        success: function(data) {
+        data: {'species_id': speciesID},
+        success: function (data) {
             var biomes = $('#biomes');
             biomes.empty();
             $.each(data, function (index, element) {
@@ -48,6 +53,9 @@ function getBiomes(speciesID) {
             });
         }
     });
+}
+
+function getMetrics(speciesID) {
     $.ajax({
         type: "GET",
         url: "/getMetrics",

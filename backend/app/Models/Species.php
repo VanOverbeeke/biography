@@ -20,9 +20,9 @@ class Species extends Model
         'wiki',
         'age',
         'size',
-        'weight'
+        'weight',
+        'rrna'
     ];
-
 
     public function genus() {
         return $this->belongsTo(Genus::class);
@@ -30,6 +30,19 @@ class Species extends Model
 
     public function biomes() {
         return $this->belongsToMany(Biome::class, 'biome_species', 'species_id', 'biome_id');
+    }
+
+    public function allBiomes() {
+        $speciesBiomes = $this->biomes()->pluck('biome_id')->toArray();
+        $biomesList = Biome::all();
+        foreach ($biomesList as $biome) {
+            if (in_array($biome->id, $speciesBiomes)) {
+                $biome['checked'] = 'checked';
+            } else {
+                $biome['checked'] = '';
+            }
+        }
+        return $biomesList;
     }
 
 }

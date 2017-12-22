@@ -58,13 +58,22 @@
         <div class="row flex-center">
             <div class="col-md-3">
                 <label for="genus">Genus name</label>
-                <select class="form-control species" id="genus-id" name="genus_id" onchange=getSpecies(value);>
-                    <option value="None">Select genus</option>
-                    @foreach(\App\Models\Genus::select(['id', 'name'])->get()->toArray() as $genus)
-                        <option value="{{$genus['id']}}">{{$genus['name']}}</option>
-                    @endforeach
-                </select>
+                {{--<select class="form-control species" id="genus-id" name="genus_id" onchange=getSpecies(value);>--}}
+                    {{--<option value="None">Select genus</option>--}}
+                    {{--@foreach(\App\Models\Genus::select(['id', 'name'])->get()->toArray() as $genus)--}}
+                        {{--<option value="{{$genus['id']}}">{{$genus['name']}}</option>--}}
+                    {{--@endforeach--}}
+                {{--</select>--}}
+                {{ Form::label('genus_id', 'Genus') }}
+                {{ Form::select('genus_id', $genusArray, 'Select genus', ['class' => 'form-control', 'onchange' => 'getSpecies(value);']) }}
             </div>
+{{--            <div class="row flex-center">
+                <div class="col-md-3 species">
+                    {{ Form::label('species_id', 'Select species') }}
+                    {{ Form::select('species_id', [], '', ['class' => 'form-control', 'onchange' => 'printSpecies(value);']) }}
+                </div>
+            </div>--}}
+
             <div class="col-md-3">
                 <label for="species">Species name</label>
                 <select class="form-control species" id="species_id" name="species_id" onchange=printSpecies(value);>

@@ -10,19 +10,21 @@
 
 @section('body')
     <form id="species" action="/species/create" method="post">
+        {{ Form::model($species, ['route'=>['species.create',$species->id]]) }}
         {{ csrf_field() }}
         <div class="row flex-center">
             <h2>Species</h2>
         </div>
         <div class="row flex-center">
-            <div class="col-lg-2">
-                <label for="genus">Genus name or <a href="/genus/create">create new</a>
-                </label>
-                {{ Form::select('genus_id', $genus_array, ['class' => 'form-control', 'onchange' => 'getSpecies(value)']) }}
+            <div class="col-md-3 species">
+                {{ Form::label('genus_id', 'Genus or ') }}
+                <a href="/genus/create">create new</a>
+                {{ Form::select('genus_id', $genusArray, $species->genus_id, ['class' => 'form-control', 'onchange' => 'getSpecies(value);']) }}
             </div>
-            <div class="col-lg-2">
-               <label for="species">Species name</label>
-               <input type="string" class="form-control species" id="species" name="name" placeholder="Species name" value="{{ old('name') }}">
+            <div class="col-md-3 species">
+                {{ Form::label('name', 'Species') }}
+                <br>
+                {{ Form::text('name', 'Enter species name', ['class' => 'form-control', 'onfocus' => 'if (this.value=="Enter species name") this.value="";']) }}
             </div>
         </div>
 
@@ -31,41 +33,55 @@
         <div class="row flex-center">
             <h2>Metrics</h2>
         </div>
-        <div class="row flex-center">
-            <div class ="form-group col-lg-2">
-                <label for="weight">Weight (kg)</label>
-                <input type="float" class="form-control" id="weight" name="weight" value="{{ old('weight') }}">
+        <div class="row flex-center" id="metrics">
+            <div class="col-md-2">
+                {{ Form::label('weight', 'Weight') }}
+                <br>
+                {{ Form::number('weight', old('weight', $species->weight), ['step' => '0.01']) }}
             </div>
-            <div class ="form-group col-lg-2">
-                <label for="species">Size</label>
-                <input type="float" class="form-control" id="size" name="size" value="{{ old('size') }}">
+            <div class="col-md-2">
+                {{ Form::label('size', 'Size') }}
+                <br>
+                {{ Form::number('size', old('size', $species->size), ['step' => '0.01']) }}
+            </div>
+            <div class="col-md-2">
+                {{ Form::label('age', 'Age') }}
+                <br>
+                {{ Form::number('age') }}
+            </div>
+            <div class="col-md-2">
+                {{ Form::label('wiki', 'Wiki') }}
+                <br>
+                {{ Form::url('wiki') }}
             </div>
         </div>
-
+        <br>
         <div class="row flex-center">
-            <div class ="form-group col-lg-2">
-                <label for="species">Lifespan</label>
-                <input type="float" class="form-control" id="age" name="age" value="{{ old('age') }}">
-            </div>
-            <div class ="form-group col-lg-2">
-                <label for="species">Encyclopedia</label>
-                <input type="url" class="form-control" id="wiki" name="wiki" value="{{ old('wiki') }}">
+            <h2>Genetics</h2>
+        </div>
+        <div class="row flex-center" id="rrna">
+            <div class="col-lg-8 col-md-9 col-sm-10 col-xs-11">
+                {{ Form::label('rrna', '16S rRNA') }}
+                <br>
+                <div class="sequence">
+                    {{ Form::textarea('rrna', (old('rrna', $species->rrna) ? 'x' : 'o'), ['size'=>'100x6', 'class'=>'.sequence']) }}
+                </div>
             </div>
         </div>
-
+        <br>
         <div class="row flex-center">
             <h2>Biomes</h2>
         </div>
         <div class="row flex-center">
-            <div class ="form-group col-lg-5">
-                <div class="form-check">
-                    @foreach(\App\Models\Biome::select(['id','name'])->get()->toArray() as $biome)
-                        <label class="form-check-label">
-                            <input name="biomes[]" type="checkbox" class="form-check-input" value="{{$biome['id']}}">
-                            {{$biome['name']}}
-                        </label>
+            <div class ="form-group col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                <ul class="form-check list-group flex-row flex-wrap" id="biomes">
+                    @foreach($species->allBiomes() as $biome)
+                        <li class="list-group-item form-check-input col-lg-3 col-md-4 col-sm-4 col-xs-6">
+                            {{ Form::checkbox('biomes[]', $biome->id, $species->biomes->contains($biome->id) ? 'checked' : '') }}
+                            {{ Form::label('biomes[]', $biome->name) }}
+                        </li>
                     @endforeach
-                </div>
+                </ul>
             </div>
         </div>
 

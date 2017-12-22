@@ -10,6 +10,7 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use App\Repositories\Biography\Genus\GenusRepository;
 
 class Genus extends Model
 {
@@ -21,5 +22,14 @@ class Genus extends Model
 
     public function species() {
         return $this->hasMany(Species::class);
+    }
+
+    public function genusArray(){
+        $genusRepository = new GenusRepository();
+        $genusCollection = $genusRepository->getAllWithProps(['id','name']);
+        $genusArray = $genusCollection->mapWithKeys(function ($genus) {
+            return [$genus['id'] => $genus['name']];
+        });
+        return $genusArray;
     }
 }

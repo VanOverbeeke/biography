@@ -26,6 +26,7 @@ class SpeciesController extends Controller
     {
         $sortBy = $request->has('sortBy') ? $request->get('sortBy') : 'id';
         $filterBy = $request->has('filterBy') ? $request->get('filterBy') : 'all';
+
         if($species_id!='*') {
             $species = Species::with(['biomes', 'genus'])
                 ->where('id', '=', $species_id)
@@ -41,7 +42,6 @@ class SpeciesController extends Controller
                 ->get()
                 ->sortBy($sortBy);
         }
-
         return view('/species/index', compact(['species', 'sortBy', 'filterBy', 'selectID']));
     }
 
@@ -52,12 +52,12 @@ class SpeciesController extends Controller
      */
     public function create()
     {
-        $genusRepository = new GenusRepository();
-        $genus_collection = $genusRepository->getAllWithProps(['id','name']);
-        $genus_array = $genus_collection->mapWithKeys(function ($genus) {
-            return [$genus['id'] => $genus['name']];
-        });
-        return view('/species/create', compact(['genus_array']));
+        $species = new Species;
+        $tempGenus = new Genus;
+        $genusArray = $tempGenus->genusArray();
+        $speciesArray = Species::all();
+        $biomes = Biome::all();
+        return view('species.create', compact(['species', 'speciesArray', 'genusArray', 'biomes']));
     }
 
     /**
@@ -75,9 +75,9 @@ class SpeciesController extends Controller
         $species->age = $request->get('age');
         $species->size = $request->get('size');
         $species->weight = $request->get('weight');
+        $species->rrna = $request->get('rrna');
         $species->save();
         $biomes = $request->get('biomes');
-        $species->biomes()->detach();
         foreach ($biomes as $biome)
             $species->biomes()->attach($biome);
         $species->save();
@@ -102,29 +102,15 @@ class SpeciesController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $species_id='None')
+    public function edit($species_id)
     {
-        $genusRepository = new GenusRepository();
-        $genus_collection = $genusRepository->getAllWithProps(['id','name']);
-        $genus_array = $genus_collection->mapWithKeys(function ($genus) {
-            return [$genus['id'] => $genus['name']];
-        });
-
-        if($species_id==='None') {
-            $species_name = 'Select genus first';
-            $genus_id = 'None';
-            $genus_name = 'Select genus';
-        } else {
-            $species = Species::where('id', '=', $species_id)
-                ->get(['name', 'genus_id'])[0];
-            $species_name = $species->name;
-            $genus_id = $species->genus_id;
-            $genus_name = Genus::where('id', '=', $genus_id)
-                ->get(['name'])[0]
-                ->name;
-        }
-        $data = \App\Models\Genus::select(['id', 'name'])->get()->toArray();
-        return view('species.edit', compact(['species', 'species_id', 'species_name', 'genus_array', 'genus_id', 'genus_name']));
+        $species = Species::find($species_id);
+        $genus_id = $species->genus_id;
+        $genus = Genus::find($species->genus_id)->name;
+        $biomes = Biome::all();
+        $biomesArray = $species->allBiomes();
+        $name = $species->name;
+        return view('/species/edit', compact(['species_id', 'species', 'name', 'genus', 'biomes', 'biomesArray']));
     }
 
     /**
@@ -134,25 +120,16 @@ class SpeciesController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(StoreSpecies $request, $species_id)
     {
-        $id = $request['species_id'];
-        $validatedData = $request->validate([
-            'name' => 'string|required|unique:species|max:50',
-            'genus_id' => 'required|exists:genus,id',
-            'wiki' => 'nullable|url',
-            'age' => 'nullable|numeric',
-            'size' => 'nullable|numeric',
-            'weight' => 'nullable|numeric'
-        ]);
-        $species = Species::find($id);
-//        $species->name = $validatedData['name'];
-        $species->genus_id = $validatedData['genus_id'];
-        $species->wiki = $validatedData['wiki'];
-        $species->age = $validatedData['age'];
-        $species->size = $validatedData['size'];
-        $species->weight = $validatedData['weight'];
-
+        $species = Species::find($species_id);
+        $species->name = $request->get('name');
+        $species->genus_id = $request->get('genus_id');
+        $species->wiki = $request->get('wiki');
+        $species->age = $request->get('age');
+        $species->size = $request->get('size');
+        $species->weight = $request->get('weight');
+        $species->rrna = $request->get('rrna');
         $species->save();
         $biomes = $request['biomes'];
         $species->biomes()->detach();
@@ -176,39 +153,6 @@ class SpeciesController extends Controller
             return response('Species deletion success!', 200)
                 ->header('Content-Type', 'text/plain');
         }
-    }
-
-    public function find() {
-        $input = Input::get('genus_id');
-        if ($input === 'None') {
-            return [];
-        } else {
-            $genus = Genus::find($input);
-            $species = $genus->species();
-        }
-        $species = Response::make($species->get(['id','name']));
-        return $species;
-    }
-
-    public function biomes() {
-        $species_id = intval(Input::get('species_id'));
-        $all = Biome::get();
-        $biomes = Biome::whereHas('species', function($q) use($species_id) {
-            $q->where('species_id', $species_id);
-        })->get();
-        $nonbiomes = $all->diff($biomes)->toArray();
-        $biomes = $biomes->toArray();
-        $response = array();
-        foreach ($biomes as $biome) {
-            $biome['checked'] = ' checked';
-            $response[$biome['name']] = $biome;
-        };
-        foreach ($nonbiomes as $nonbiome) {
-            $nonbiome['checked'] = '';
-            $response[$nonbiome['name']] = $nonbiome;
-        };
-        ksort($response);
-        return $response;
     }
 
     public function metrics() {
@@ -239,11 +183,20 @@ class SpeciesController extends Controller
             'type'=>'url',
             'old'=>$species->wiki
         ];
+        $response['rrna'] = [
+            'name'=>'rrna',
+            'label'=>'rRNA',
+            'type'=>'text',
+            'old'=>$species->rrna
+        ];
         return $response;
     }
 
     public function search() {
-        return view('species.search');
+        $tempGenus = new Genus;
+        $genusArray = $tempGenus->genusArray();
+        $speciesArray = Species::all();
+        return view('species.search', compact(['speciesArray', 'genusArray']));
     }
 
 }

@@ -47,6 +47,9 @@ footer {
     font-style: italic;
     font-weight: 600;
 }
+.sequence {
+    font-size: 8px;
+}
 .full-height {
     height: 100vh;
 }
