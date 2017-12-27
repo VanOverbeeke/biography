@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Input;
 use \Illuminate\Support\Facades\Response;
 
+/*
+ * Genus Functionality
+ */
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -32,7 +36,9 @@ Route::delete('/genus/delete/{genus_id}', [
     'as' => 'genus.delete'
 ]);
 
-////////////////////////////////////////////////////
+/*
+ * Species Functionality
+ *//////
 
 Route::get('species/index/{species_id}', [
     'uses' => 'Biography\SpeciesController@index',
@@ -54,6 +60,10 @@ Route::get('species/search', [
     'as' => 'species.search'
 ]);
 
+/*
+ * New Species
+ *//////
+
 Route::get('species/create', [
     'uses' => 'Biography\SpeciesController@create',
     'as' => 'species.create'
@@ -63,6 +73,10 @@ Route::post('species/create', [
     'uses' => 'Biography\SpeciesController@store',
     'as' => 'species.create'
 ]);
+
+/*
+ * Edit Species
+ *//////
 
 Route::get('species/edit/{species_id}', [
     'uses' => 'Biography\SpeciesController@edit',
@@ -74,6 +88,18 @@ Route::get('species/update/{id}', [
     'as' => 'species.update'
 ]);
 
+/*
+ * Search field for Species
+ *//////
+
+Route::get('species/query', [
+    'uses' => 'Biography\SpeciesController@query',
+    'as' => 'species.query'
+]);
+
+/*
+ * Delete Species
+ *//////
 Route::delete('species/delete/{species_id}', [
     'uses' => 'Biography\SpeciesController@delete',
     'as' => 'species.delete'
@@ -84,7 +110,18 @@ Route::get('species/{id}', [
     'as' => 'species.store'
 ]);
 
-///////////////////////////////////  Functions
+Route::get('/softdelete/${id}', [
+    'uses' => 'Biography\SpeciesController@delete',
+    'as' => 'species.softdelete'
+]);
+Route::get('/readDeleted/${id}', [
+    'uses' => 'Biography\SpeciesController@readDeleted',
+    'as' => 'species.readdeleted'
+]);
+
+/*
+ * AJAX linkage
+ */
 
 Route::get('/getSpecies', [
     'uses' => 'Biography\GenusController@findSpecies',
@@ -101,7 +138,9 @@ Route::get('/getMetrics', [
     'as' => 'species.metrics'
 ]);
 
-/////////////////////////////////    General
+/*
+ * General views
+ *//////
 
 Route::get('/contact', function () {
     return view('contact');

@@ -11,6 +11,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Repositories\Biography\Genus\GenusRepository;
+use App\Models\Species;
 
 class Genus extends Model
 {
@@ -32,4 +33,15 @@ class Genus extends Model
         });
         return $genusArray;
     }
+
+    public function biomes() {
+        $biomes = [];
+        foreach ($this->species as $specie) {
+            foreach ($specie->biomes as $biome) {
+                array_push($biomes, $biome->name);
+            }
+        }
+        return array_unique($biomes);
+    }
+
 }

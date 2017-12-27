@@ -5,12 +5,11 @@
 @stop
 
 @section('header')
-    Details
+    Genus
 @stop
 
 @section('body')
     <div id="controls">
-
         <div class="row flex-center">
             <div class="col-lg-3">
                 <p>Sort by</p>
@@ -72,22 +71,23 @@
     <table id="table" class="table flex-center">
         <thead>
         <tr>
-            <th> Delete </th>
             <th> Genus </th>
             <th> Species </th>
+            <th> All biomes </th>
         </tr>
         </thead>
         <tbody>
         @foreach($genus as $genu)
             <tr>
-                <td>{{ Form::open(['route' => ['genus.delete', $genu->id], 'method' => 'delete']) }}
-                    <button type="submit" class="btn btn-danger">X</button>
-                    {{Form::close()}}
-                </td>
                 <td><a class="genus">{{$genu->name}}</a></td>
                 <td>
                     @foreach ($genu->species as $specie)
                         {{$specie->name}}{{ ($loop->last) ? '' : ',' }}
+                    @endforeach
+                </td>
+                <td>
+                    @foreach ($genu->biomes() as $biome)
+                        {{$biome}}{{ ($loop->last) ? '' : ',' }}
                     @endforeach
                 </td>
             </tr>

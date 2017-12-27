@@ -20,29 +20,32 @@ class SpeciesController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
+     * @param string $species_id
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $species_id="*")
-    {
-        $sortBy = $request->has('sortBy') ? $request->get('sortBy') : 'id';
-        $filterBy = $request->has('filterBy') ? $request->get('filterBy') : 'all';
+    public function index(Request $request) {
+        $speciesRepository = new SpeciesRepository();
+        //dd($request);
+        $queryParams = [
+            'species_id' => $request->species_id,
+            'genus_id' => $request->genus_id,
+            'filterByBiomes' => $request->filterByBiomes,
+            'sortBy' => $request->sortBy,
+        ];
+        return $speciesRepository->index($queryParams);
+    }
 
-        if($species_id!='*') {
-            $species = Species::with(['biomes', 'genus'])
-                ->where('id', '=', $species_id)
-                ->get();
-        } elseif ($filterBy==='all') {
-            $species = Species::with(['biomes', 'genus'])
-                ->get()
-                ->sortBy($sortBy);
-        } else {
-            $species = Species::whereHas('biomes', function ($query) use ($filterBy) {
-                $query->where('biomes.id', 'LIKE', $filterBy);
-            })
-                ->get()
-                ->sortBy($sortBy);
-        }
-        return view('/species/index', compact(['species', 'sortBy', 'filterBy', 'selectID']));
+    public function query(Request $request) {
+        $speciesRepository = new SpeciesRepository();
+        $query = $request->get('query');
+        $queryParams = [
+            'species_id' => 0,
+            'genus_id' => 0,
+            'filterByBiomes' => 0,
+            'sortBy' => 0,
+        ];
+        return $speciesRepository->query($query, $queryParams);
+
     }
 
     /**
@@ -68,21 +71,8 @@ class SpeciesController extends Controller
      */
     public function store(StoreSpecies $request)
     {
-        $species = new Species;
-        $species->name = $request->get('name');
-        $species->genus_id = $request->get('genus_id');
-        $species->wiki = $request->get('wiki');
-        $species->age = $request->get('age');
-        $species->size = $request->get('size');
-        $species->weight = $request->get('weight');
-        $species->rrna = $request->get('rrna');
-        $species->save();
-        $biomes = $request->get('biomes');
-        foreach ($biomes as $biome)
-            $species->biomes()->attach($biome);
-        $species->save();
-        return response('Species addition success!', 200)
-            ->header('Content-Type', 'text/plain');
+        $speciesRepository = new SpeciesRepository();
+        return $speciesRepository->store($request);
     }
 
     /**
@@ -153,6 +143,19 @@ class SpeciesController extends Controller
             return response('Species deletion success!', 200)
                 ->header('Content-Type', 'text/plain');
         }
+    }
+
+    public function readDeleted($id) {
+        $species = Species::withTrashed()->find($id);
+        $species = Species::onlyTrashed()->find($id);
+        return $species;
+    }
+
+    public function restore($id) {
+        $species = Species::withTrashed()
+            ->where('id', $id)
+            ->restore();
+        return $species;
     }
 
     public function metrics() {

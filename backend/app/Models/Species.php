@@ -9,6 +9,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Species extends Model
 {
@@ -23,6 +24,8 @@ class Species extends Model
         'weight',
         'rrna'
     ];
+
+    protected $dates = ['deleted_at'];
 
     public function genus() {
         return $this->belongsTo(Genus::class);
