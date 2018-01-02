@@ -15,7 +15,7 @@ class AddSpeciesRrna extends Migration
     {
         if (Schema::hasTable('species')) {
             Schema::table('species', function (Blueprint $table) {
-                $table->string('rrna')->nullable();
+                $table->string('rrna', 3000)->nullable();
             });
         }
     }

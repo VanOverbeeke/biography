@@ -18,5 +18,4 @@
     <h1>Species</h1>
     <a href="/species/index">Index</a>
     <a href="/species/create">New</a>
-    <a href="/species/search">Search</a>
 @stop

@@ -17,22 +17,57 @@ class SpeciesRepository implements SpeciesInterface
         return Species::all();
     }
 
-    public function index(array $queryParams) {
+    public function index(array $requestParams) {
         $species = Species::with(['biomes', 'genus']);
-        if ($queryParams['species_id']) {
-            $species = $species->where('id', '=', $queryParams['species_id']);
-        }
-        if ($queryParams['filterByBiomes']) {
-            $filterByBiomes = $queryParams['filterByBiomes'];
-            $species = $species->whereHas('biomes', function ($query) use ($filterByBiomes) {
-                $query->where('biomes.id', 'LIKE', $filterByBiomes);
+        if (isset($requestParams['oneBiome']) and ($requestParams['oneBiome'] != 0)) {
+            $oneBiome = $requestParams['oneBiome'];
+            $species = $species->whereHas('biomes', function ($query) use ($oneBiome) {
+                $query->where('biomes.id', $oneBiome);
             });
         }
-        if ($queryParams['sortBy']) {
-            $species = $species->orderBy($queryParams['sortBy']);
+//        if (isset($requestParams['joinBiome'])) {
+//            $joinBiome = $requestParams['joinBiome'];
+//            $species = $species->join('species_biomes', 'species_id', 'on', 'biome_id');
+//        }
+        if (isset($requestParams['query'])) {
+            $genusList = Genus::where('name', 'like', '%'.$requestParams['query'].'%')->pluck('id')->toArray();
+            $species = $species->where(function($q) use ($genusList, $requestParams) {
+                $q->whereIn('genus_id', $genusList )->orWhere('name', 'like', '%'.$requestParams['query'].'%');
+            });
         }
-        $species = $species->get();
-        return view('/species/index', compact(['species', 'queryParams']));
+        if (isset($requestParams['ageLarger'])) {
+            $species = $species->where('age', '>=', $requestParams['ageLarger']);
+        }
+        if (isset($requestParams['ageSmaller'])) {
+            $species = $species->where('age', '<=', $requestParams['ageSmaller']);
+        }
+        if (isset($requestParams['ageEqual'])) {
+            $species = $species->where('age', '=', $requestParams['ageEqual']);
+        }
+        if (isset($requestParams['sizeLarger'])) {
+            $species = $species->where('size', '>=', $requestParams['sizeLarger']);
+        }
+        if (isset($requestParams['sizeSmaller'])) {
+            $species = $species->where('size', '<=', $requestParams['sizeSmaller']);
+        }
+        if (isset($requestParams['sizeEqual'])) {
+            $species = $species->where('size', '=', $requestParams['sizeEqual']);
+        }
+        if (isset($requestParams['weightLarger'])) {
+            $species = $species->where('weight', '>=', $requestParams['weightLarger']);
+        }
+        if (isset($requestParams['weightSmaller'])) {
+            $species = $species->where('weight', '<=', $requestParams['weightSmaller']);
+        }
+        if (isset($requestParams['weightEqual'])) {
+            $species = $species->where('weight', '=', $requestParams['weightEqual']);
+        }
+        if (isset($requestParams['sortBy'])) {
+            $sortDir = ($requestParams['sortDir']) ? 'ASC' : 'DESC';
+            $species = $species->orderBy($requestParams['sortBy'], $sortDir);
+        }
+        $speciesList = $species->get();
+        return $speciesList;
     }
 
     public function find(int $id) {
@@ -68,18 +103,18 @@ class SpeciesRepository implements SpeciesInterface
 
     }
 
-    public function store(Request $request)
+    public function store(array $request)
     {
         $species = new Species;
-        $species->name = $request->get('name');
-        $species->genus_id = $request->get('genus_id');
-        $species->wiki = $request->get('wiki');
-        $species->age = $request->get('age');
-        $species->size = $request->get('size');
-        $species->weight = $request->get('weight');
-        $species->rrna = $request->get('rrna');
+        $species->name = $request['name'];
+        $species->genus_id = $request['genus_id'];
+        $species->wiki = $request['wiki'];
+        $species->age = $request['age'];
+        $species->size = $request['size'];
+        $species->weight = $request['weight'];
+        $species->rrna = $request['rrna'];
         $species->save();
-        $biomes = $request->get('biomes');
+        $biomes = $request['biomes'];
         foreach ($biomes as $biome)
             $species->biomes()->attach($biome);
         $species->save();
@@ -94,25 +129,17 @@ class SpeciesRepository implements SpeciesInterface
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(array $request)
     {
-        $id = $request['species_id'];
-        $validatedData = $request->validate([
-//            'name' => 'string|required|unique:species|max:50',
-            'genus_id' => 'required|exists:genus,id',
-            'wiki' => 'nullable|url',
-            'age' => 'nullable|numeric',
-            'size' => 'nullable|numeric',
-            'weight' => 'nullable|numeric'
-        ]);
+        $id = $request['id'];
         $species = Species::find($id);
-//        $species->name = $validatedData['name'];
-        $species->genus_id = $validatedData['genus_id'];
-        $species->wiki = $validatedData['wiki'];
-        $species->age = $validatedData['age'];
-        $species->size = $validatedData['size'];
-        $species->weight = $validatedData['weight'];
-
+        $species->name = $request['name'];
+        $species->genus_id = $request['genus_id'];
+        $species->wiki = $request['wiki'];
+        $species->age = $request['age'];
+        $species->size = $request['size'];
+        $species->weight = $request['weight'];
+        $species->rrna = $request['rrna'];
         $species->save();
         $biomes = $request['biomes'];
         $species->biomes()->detach();
@@ -121,20 +148,6 @@ class SpeciesRepository implements SpeciesInterface
         $species->save();
         return response('Species edit success!', 200)
             ->header('Content-Type', 'text/plain');
-    }
-
-    public function query( string $query, array $queryParams) {
-        $species = Species::where('name', 'like', "%$query%")->get();
-        $genusList = Genus::where('name', 'like', "%$query%")->pluck('id')->toArray();
-        $speciesByGenus = Species::whereIn('genus_id', $genusList )->get();
-        $species = $species->merge($speciesByGenus);
-        $queryParams = [
-            'species_id' => 0,
-            'genus_id' => 0,
-            'filterByBiomes' => 0,
-            'sortBy' => 0,
-        ];
-        return view('/species/index', compact(['species', 'queryParams']));
     }
 
     public function biomes() {

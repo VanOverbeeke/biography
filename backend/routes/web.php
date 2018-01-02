@@ -55,11 +55,6 @@ Route::get('species', [
     'as' => 'species.store'
 ]);
 
-Route::get('species/search', [
-    'uses' => 'Biography\SpeciesController@search',
-    'as' => 'species.search'
-]);
-
 /*
  * New Species
  *//////
@@ -86,15 +81,6 @@ Route::get('species/edit/{species_id}', [
 Route::get('species/update/{id}', [
     'uses' => 'Biography\SpeciesController@update',
     'as' => 'species.update'
-]);
-
-/*
- * Search field for Species
- *//////
-
-Route::get('species/query', [
-    'uses' => 'Biography\SpeciesController@query',
-    'as' => 'species.query'
 ]);
 
 /*
