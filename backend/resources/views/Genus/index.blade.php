@@ -74,6 +74,7 @@
             <th> Genus </th>
             <th> Species </th>
             <th> All biomes </th>
+            <th> New biomes </th>
         </tr>
         </thead>
         <tbody>
@@ -89,6 +90,9 @@
                     @foreach ($genu->biomes() as $biome)
                         {{$biome}}{{ ($loop->last) ? '' : ',' }}
                     @endforeach
+                </td>
+                <td>
+                    {{ $genu->get_biomes() }}
                 </td>
             </tr>
         @endforeach

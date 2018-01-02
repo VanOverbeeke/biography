@@ -105,6 +105,30 @@ Route::get('/readDeleted/${id}', [
     'as' => 'species.readdeleted'
 ]);
 
+
+/*
+ * Picture paths
+ */
+Route::get('picture/index', [
+    'uses' => 'Biography\PictureController@index',
+    'as' => 'picture.index',
+]);
+
+Route::get('picture/create', [
+    'uses' => 'Biography\PictureController@create',
+    'as' => 'picture.create'
+]);
+
+Route::post('picture/create', [
+    'uses' => 'Biography\PictureController@store',
+    'as' => 'picture.store'
+]);
+
+Route::delete('picture/delete/{picture_id}', [
+    'uses' => 'Biography\PictureController@delete',
+    'as' => 'picture.delete'
+]);
+
 /*
  * AJAX linkage
  */

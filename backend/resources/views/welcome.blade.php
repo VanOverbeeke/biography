@@ -18,4 +18,10 @@
     <h1>Species</h1>
     <a href="/species/index">Index</a>
     <a href="/species/create">New</a>
+
+    <br><br><br><br>
+
+    <h1>Pictures</h1>
+    <a href="/picture/index">Index</a>
+    <a href="/picture/create">New</a>
 @stop

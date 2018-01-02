@@ -12,6 +12,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Repositories\Biography\Genus\GenusRepository;
 use App\Models\Species;
+use App\Models\Biome;
 
 class Genus extends Model
 {
