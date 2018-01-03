@@ -122,6 +122,7 @@
                 <a>None</a>
             @endif
         </div>
+        {{ Form::close() }}
     </div>
     <br>
     <table id="table" class="table flex-center">
@@ -142,8 +143,7 @@
             <tr>
                 <td>{{ Form::open(['route' => ['species.edit', $species->id], 'method' => 'get']) }}
                     {{ Form::submit('Edit', ['class'=>'btn btn-success btn-sm']) }}
-                    {{ Form::close()}}
-                </td>
+                    {{ Form::close()}}</td>
                 <td><a href="{{$species->wiki}}" class="species">{{$species->genus->name}} {{$species->name}}</a></td>
                 <td> {{$species->age}} </td>
                 <td> {{$species->size}} </td>

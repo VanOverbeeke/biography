@@ -133,18 +133,9 @@ class SpeciesRepository implements SpeciesInterface
     {
         $id = $request['id'];
         $species = Species::find($id);
-        $species->name = $request['name'];
-        $species->genus_id = $request['genus_id'];
-        $species->wiki = $request['wiki'];
-        $species->age = $request['age'];
-        $species->size = $request['size'];
-        $species->weight = $request['weight'];
-        $species->rrna = $request['rrna'];
+        $species->update($request);
         $species->save();
-        $biomes = $request['biomes'];
-        $species->biomes()->detach();
-        foreach ($biomes as $biome)
-            $species->biomes()->attach($biome);
+        $species->biomes()->sync($request['biomes']);
         $species->save();
         return response('Species edit success!', 200)
             ->header('Content-Type', 'text/plain');
