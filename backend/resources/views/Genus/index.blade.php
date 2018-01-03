@@ -71,15 +71,17 @@
     <table id="table" class="table flex-center">
         <thead>
         <tr>
+            <th> ID </th>
             <th> Genus </th>
             <th> Species </th>
             <th> All biomes </th>
-            <th> New biomes </th>
+            <th> Pictures </th>
         </tr>
         </thead>
         <tbody>
         @foreach($genus as $genu)
             <tr>
+                <td>{{$genu->id}}</td>
                 <td><a class="genus">{{$genu->name}}</a></td>
                 <td>
                     @foreach ($genu->species as $specie)
@@ -92,7 +94,9 @@
                     @endforeach
                 </td>
                 <td>
-                    {{ $genu->get_biomes() }}
+                    @foreach ($genu->pictures() as $pic)
+                        <a href="{{$pic->path}}"><img src="{{$pic->path}}" width="100px" height="100px"></a>
+                    @endforeach
                 </td>
             </tr>
         @endforeach

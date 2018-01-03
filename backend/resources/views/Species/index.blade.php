@@ -134,6 +134,7 @@
             <th> Max weight (kg)</th>
             <th> Biome</th>
             <th> 18S rRNA</th>
+            <th> Pictures</th>
         </tr>
         </thead>
         <tbody>
@@ -153,6 +154,11 @@
                     @endforeach
                 </td>
                 <td> {{ ($species->rrna) ? 'FASTA' : '' }} </td>
+                <td>
+                    @foreach ($species->pictures() as $pic)
+                        <a href="{{$pic->path}}"><img src="{{$pic->path}}" width="100px" height="100px"></a>
+                    @endforeach
+                </td>
             </tr>
         @endforeach
         </tbody>

@@ -155,3 +155,11 @@ Route::get('/getMetrics', [
 Route::get('/contact', function () {
     return view('contact');
 });
+
+/*
+ * Polymorphic relationships
+ */
+Route::get('/pictures/{id}', [
+    'uses' => 'Biography\PictureController@show',
+    'as' => 'picture.show'
+]);

@@ -10,6 +10,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Picture;
+//use Illuminate\Support\Facades\DB;
 
 class Species extends Model
 {
@@ -46,6 +48,10 @@ class Species extends Model
             }
         }
         return $biomesList;
+    }
+
+    public function pictures() {
+        return $this->morphMany('App\Models\Picture', 'imageable', 'imageable_type', 'imageable_id')->get();
     }
 
 }

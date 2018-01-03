@@ -24,7 +24,7 @@
             <div class="col-md-3">
                 {{ Form::label('imageable_type', 'Type') }}
                 <br>
-                {{ Form::select('imageable_type', ['Genus'=>'App\Models\Genus', 'Species'=>'App\Models\Species'], null, ['class' => 'form-control']) }}
+                {{ Form::select('imageable_type', ['App\Models\Genus'=>'Genus', 'App\Models\Species'=>'Species'], null, ['class' => 'form-control']) }}
             </div>
             <div class="col-md-3 species">
                 {{ Form::label('imageable_id', 'ID') }}

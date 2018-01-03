@@ -67,7 +67,8 @@ class PictureController extends Controller
      */
     public function show($id)
     {
-        //
+        $picture = Picture::findOrFail($id);
+        return $picture;
     }
 
     /**

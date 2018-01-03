@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Repositories\Biography\Genus\GenusRepository;
 use App\Models\Species;
 use App\Models\Biome;
+use App\Models\Picture;
 
 class Genus extends Model
 {
@@ -43,6 +44,10 @@ class Genus extends Model
             }
         }
         return array_unique($biomes);
+    }
+
+    public function pictures() {
+        return $this->morphMany('App\Models\Picture', 'imageable', 'imageable_type', 'imageable_id')->get();
     }
 
 }

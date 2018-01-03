@@ -28,7 +28,7 @@ class PictureRepository implements PictureInterface
     }
 
     public function add(Picture $picture) {
-        $this->Picture[$picture->id] = $picture;
+        $this->picture[$picture->id] = $picture;
     }
 
     public function delete(int $id)
@@ -37,39 +37,16 @@ class PictureRepository implements PictureInterface
     }
 
     public function remove(int $id) {
-        unset($this->Picture['id']);
-    }
-
-    public function getPictureByGenus(int $genus_id) {
-        return array_filter($this->getAll()->toArray(), function ($picture) use ($genus_id) {
-            return $this->Picture->genus_id === $genus_id;
-        });
-    }
-
-    public function getPictureByBiome(int $biome_id) {
-        return array_filter($this->Picture, function ($picture) use ($biome_id) {
-            return in_array($biome_id, $this->Picture->biomes);
-        });
-    }
-
-    public function addBiome($biome_id) {
-
+        unset($this->picture['id']);
     }
 
     public function store(array $request)
     {
         $picture = new Picture;
-        $picture->name = $request['name'];
-        $picture->genus_id = $request['genus_id'];
-        $picture->wiki = $request['wiki'];
-        $picture->age = $request['age'];
-        $picture->size = $request['size'];
-        $picture->weight = $request['weight'];
-        $picture->rrna = $request['rrna'];
+        $picture->path = $request['path'];
+        $picture->imageable_id = $request['imageable_id'];
+        $picture->imageable_type = $request['imageable_type'];
         $picture->save();
-        $biomes = $request['biomes'];
-        foreach ($biomes as $biome)
-            $picture->biomes()->attach($biome);
         $picture->save();
         return response('Picture addition success!', 200)
             ->header('Content-Type', 'text/plain');
