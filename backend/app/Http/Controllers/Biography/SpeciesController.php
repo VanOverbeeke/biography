@@ -71,7 +71,9 @@ class SpeciesController extends Controller
      */
     public function show($id)
     {
-        //
+        $speciesList = [Species::findOrfail($id)];
+        $requestParams = [];
+        return view('species.index', compact(['speciesList', 'requestParams']));
     }
 
     /**
@@ -82,9 +84,9 @@ class SpeciesController extends Controller
      */
     public function edit($species_id)
     {
-        $species = Species::find($species_id);
+        $species = Species::findOrFail($species_id);
         $genus_id = $species->genus_id;
-        $genus = Genus::find($species->genus_id)->name;
+        $genus = Genus::findOrFail($species->genus_id)->name;
         $biomes = Biome::all();
         $biomesArray = $species->allBiomes();
         $name = $species->name;

@@ -67,8 +67,9 @@ class PictureController extends Controller
      */
     public function show($id)
     {
-        $picture = Picture::findOrFail($id);
-        return $picture;
+        $pictureList = [Picture::findOrFail($id)];
+        $requestParams = [];
+        return view('picture.index', compact(['pictureList', 'requestParams']));
     }
 
     /**
@@ -79,7 +80,7 @@ class PictureController extends Controller
      */
     public function edit($picture_id)
     {
-        $picture = Picture::find($picture_id);
+        $picture = Picture::findOrFail($picture_id);
         return view('/picture/edit', compact(['picture']));
     }
 

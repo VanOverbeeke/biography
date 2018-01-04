@@ -81,7 +81,16 @@
         <tbody>
         @foreach($genus as $genu)
             <tr>
-                <td>{{$genu->id}}</td>
+                <td><a href="/genus/{{$genu->id}}">{{$genu->id}}</a></td>
+                <td>
+                    {{ Form::open(['method'=>'delete', 'route'=>['genus.destroy', $genu->id]]) }}
+                    {{ Form::hidden('id', $genu->id) }}
+                    {{ Form::submit('Delete', ['class'=>'btn btn-danger btn-sm']) }}
+                    {{ Form::close() }}
+                </td>
+                <td>{{ Form::open(['route' => ['genus.edit', $genu->id], 'method' => 'get']) }}
+                    {{ Form::submit('Edit', ['class'=>'btn btn-success btn-sm']) }}
+                    {{ Form::close()}}</td>
                 <td><a class="genus">{{$genu->name}}</a></td>
                 <td>
                     @foreach ($genu->species as $specie)

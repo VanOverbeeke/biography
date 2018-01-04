@@ -27,7 +27,7 @@ class GenusRepository implements GenusInterface
 
     public function delete(int $id)
     {
-        return Genus::find($id)->delete();
+        return Genus::findOrFail($id)->delete();
     }
 
 //    public function remove(int $id) {

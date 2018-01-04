@@ -127,25 +127,32 @@
     <br>
     <table id="table" class="table flex-center">
         <thead>
-        <tr>
-            <th> Edit</th>
-            <th> ID </th>
-            <th> Species</th>
-            <th> Age (y)</th>
-            <th> Max size (m)</th>
-            <th> Max weight (kg)</th>
-            <th> Biome</th>
-            <th> 18S rRNA</th>
-            <th> Pictures</th>
-        </tr>
+            <tr>
+                <th> ID </th>
+                <th> Delete </th>
+                <th> Edit</th>
+                <th> Species</th>
+                <th> Age (y)</th>
+                <th> Max size (m)</th>
+                <th> Max weight (kg)</th>
+                <th> Biome</th>
+                <th> 18S rRNA</th>
+                <th> Pictures</th>
+            </tr>
         </thead>
         <tbody>
         @foreach($speciesList as $species)
             <tr>
+                <td><a href="/species/{{$species->id}}">{{$species->id}}</a></td>
+                <td>
+                    {{ Form::open(['method'=>'delete', 'route'=>['species.destroy', $species->id]]) }}
+                    {{ Form::hidden('id', $species->id) }}
+                    {{ Form::submit('Delete', ['class'=>'btn btn-danger btn-sm']) }}
+                    {{ Form::close() }}
+                </td>
                 <td>{{ Form::open(['route' => ['species.edit', $species->id], 'method' => 'get']) }}
                     {{ Form::submit('Edit', ['class'=>'btn btn-success btn-sm']) }}
                     {{ Form::close()}}</td>
-                <td> {{$species->id}} </td>
                 <td><a href="{{$species->wiki}}" class="species">{{$species->genus->name}} {{$species->name}}</a></td>
                 <td> {{$species->age}} </td>
                 <td> {{$species->size}} </td>

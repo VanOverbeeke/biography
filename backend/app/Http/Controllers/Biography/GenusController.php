@@ -32,7 +32,7 @@ class GenusController extends Controller
                 ->get()
                 ->sortBy($sortBy);
         }
-        return view('/genus/index', compact(['genus', 'sortBy', 'filterBy']));
+        return view('genus.index', compact(['genus', 'sortBy', 'filterBy']));
     }
 
     /**
@@ -68,7 +68,10 @@ class GenusController extends Controller
      */
     public function show($id)
     {
-        //
+        $genus = [Genus::findOrFail($id)];
+        $filterBy = 'all';
+        $sortBy = 0;
+        return view('genus.index', compact(['genus', 'sortBy', 'filterBy']));
     }
 
     /**
@@ -77,8 +80,9 @@ class GenusController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request)
+    public function edit(int $id)
     {
+        $genus = Genus::findOrFail($id);
         return view('genus.edit', compact(['genus']));
     }
 
@@ -116,7 +120,7 @@ class GenusController extends Controller
         if ($input === 'None') {
             dd('NONE passed to findSpecies in GenusController');
         } else {
-            $genus = Genus::find($input);
+            $genus = Genus::findOrFail($input);
             $species = $genus->species();
         }
         $species = $species->get(['id','name']);

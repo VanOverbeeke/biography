@@ -18,7 +18,7 @@ class PictureRepository implements PictureInterface
     }
 
     public function find(int $id) {
-        return Picture::find($id)->get();
+        return Picture::findOrFail($id)->get();
     }
 
     public function add(Picture $picture) {
@@ -27,7 +27,7 @@ class PictureRepository implements PictureInterface
 
     public function delete(int $id)
     {
-        return Picture::find($id)->delete();
+        return Picture::findOrFail($id)->delete();
     }
 
     public function store(array $request)
@@ -49,7 +49,7 @@ class PictureRepository implements PictureInterface
     public function update(array $request)
     {
         $id = $request['id'];
-        $picture = Picture::find($id);
+        $picture = Picture::findOrFail($id);
         $picture->update($request);
         $picture->save();
         return response('Picture edit success!', 200)

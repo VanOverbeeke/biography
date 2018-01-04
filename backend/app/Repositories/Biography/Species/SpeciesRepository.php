@@ -69,7 +69,7 @@ class SpeciesRepository implements SpeciesInterface
     }
 
     public function find(int $id) {
-        return Species::find($id)->get();
+        return Species::findOrFail($id)->get();
     }
 
     public function add(Species $species) {
@@ -78,7 +78,7 @@ class SpeciesRepository implements SpeciesInterface
 
     public function delete(int $id)
     {
-        return Species::find($id)->delete();
+        return Species::findOrFail($id)->delete();
     }
 
     public function store(array $request)
@@ -100,7 +100,7 @@ class SpeciesRepository implements SpeciesInterface
      */
     public function update(array $request)
     {
-        $species = Species::find($request['id']);
+        $species = Species::findOrFail($request['id']);
         $species->update($request);
         $species->save();
         $species->biomes()->sync($request['biomes']);
