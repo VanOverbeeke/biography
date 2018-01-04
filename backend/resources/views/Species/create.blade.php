@@ -9,7 +9,7 @@
 @stop
 
 @section('body')
-    <form id="species" action="/species/create" method="post">
+    <form id="species" action="/species" method="post">
         {{ Form::model($species, ['route'=>['species.create',$species->id]]) }}
         {{ csrf_field() }}
         <div class="row flex-center">
@@ -64,7 +64,7 @@
                 {{ Form::label('rrna', '16S rRNA') }}
                 <br>
                 <div class="sequence">
-                    {{ Form::textarea('rrna', (old('rrna', $species->rrna) ? 'x' : 'o'), ['size'=>'100x6', 'class'=>'.sequence']) }}
+                    {{ Form::textarea('rrna', (old('rrna', $species->rrna) ? $species->rrna : ''), ['size'=>'100x6', 'class'=>'.sequence']) }}
                 </div>
             </div>
         </div>

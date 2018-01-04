@@ -2,11 +2,13 @@
 
 namespace App\Repositories\Biography\Species;
 
+use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Models\Genus;
 use App\Models\Species;
 use App\Models\Biome;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use App\Repositories\Biography\Species\SpeciesInterface as SpeciesInterface;
 
@@ -25,10 +27,6 @@ class SpeciesRepository implements SpeciesInterface
                 $query->where('biomes.id', $oneBiome);
             });
         }
-//        if (isset($requestParams['joinBiome'])) {
-//            $joinBiome = $requestParams['joinBiome'];
-//            $species = $species->join('species_biomes', 'species_id', 'on', 'biome_id');
-//        }
         if (isset($requestParams['query'])) {
             $genusList = Genus::where('name', 'like', '%'.$requestParams['query'].'%')->pluck('id')->toArray();
             $species = $species->where(function($q) use ($genusList, $requestParams) {
@@ -83,41 +81,12 @@ class SpeciesRepository implements SpeciesInterface
         return Species::find($id)->delete();
     }
 
-    public function remove(int $id) {
-        unset($this->species['id']);
-    }
-
-    public function getSpeciesByGenus(int $genus_id) {
-        return array_filter($this->getAll()->toArray(), function ($species) use ($genus_id) {
-            return $this->species->genus_id === $genus_id;
-        });
-    }
-
-    public function getSpeciesByBiome(int $biome_id) {
-        return array_filter($this->species, function ($species) use ($biome_id) {
-            return in_array($biome_id, $this->species->biomes);
-        });
-    }
-
-    public function addBiome($biome_id) {
-
-    }
-
     public function store(array $request)
     {
         $species = new Species;
-        $species->name = $request['name'];
-        $species->genus_id = $request['genus_id'];
-        $species->wiki = $request['wiki'];
-        $species->age = $request['age'];
-        $species->size = $request['size'];
-        $species->weight = $request['weight'];
-        $species->rrna = $request['rrna'];
+        $species->fill($request);
         $species->save();
-        $biomes = $request['biomes'];
-        foreach ($biomes as $biome)
-            $species->biomes()->attach($biome);
-        $species->save();
+        $species->biomes()->attach($request['biomes']);
         return response('Species addition success!', 200)
             ->header('Content-Type', 'text/plain');
     }
@@ -131,35 +100,12 @@ class SpeciesRepository implements SpeciesInterface
      */
     public function update(array $request)
     {
-        $id = $request['id'];
-        $species = Species::find($id);
+        $species = Species::find($request['id']);
         $species->update($request);
         $species->save();
         $species->biomes()->sync($request['biomes']);
-        $species->save();
         return response('Species edit success!', 200)
             ->header('Content-Type', 'text/plain');
-    }
-
-    public function biomes() {
-        $species_id = intval(Input::get('species_id'));
-        $all = Biome::get();
-        $biomes = Biome::whereHas('species', function($q) use($species_id) {
-            $q->where('species_id', $species_id);
-        })->get();
-        $nonbiomes = $all->diff($biomes)->toArray();
-        $biomes = $biomes->toArray();
-        $response = array();
-        foreach ($biomes as $biome) {
-            $biome['checked'] = ' checked';
-            $response[$biome['name']] = $biome;
-        };
-        foreach ($nonbiomes as $nonbiome) {
-            $nonbiome['checked'] = '';
-            $response[$nonbiome['name']] = $nonbiome;
-        };
-        ksort($response);
-        return $response;
     }
 
 }

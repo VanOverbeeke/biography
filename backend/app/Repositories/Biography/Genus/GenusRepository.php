@@ -30,9 +30,9 @@ class GenusRepository implements GenusInterface
         return Genus::find($id)->delete();
     }
 
-    public function remove(int $id) {
-        unset($this->genus['id']);
-    }
+//    public function remove(int $id) {
+//        unset($this->genus['id']);
+//    }
     /**
      * Display a listing of the resource.
      *

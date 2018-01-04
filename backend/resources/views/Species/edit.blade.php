@@ -9,7 +9,7 @@
 @stop
 
 @section('body')
-    {{ Form::model($species, ['route'=>['species.update', $species->id], 'method'=>'get']) }}
+    {{ Form::model($species, ['route'=>['species.update', $species->id], 'method'=>'put']) }}
     {{ csrf_field() }}
     <div class="row flex-center">
         <h2>Species</h2>
@@ -84,7 +84,7 @@
         {{ Form::submit('Submit', ['class'=>'btn btn-success btn-md']) }}
         {{ Form::close() }}
 
-        {{ Form::open(['method'=>'DELETE', 'route'=>['species.delete', $species->id]]) }}
+        {{ Form::open(['method'=>'DELETE', 'route'=>['species.destroy', $species->id]]) }}
             {{ Form::hidden('id', $species->id) }}
             {{ Form::submit('Delete', ['class'=>'btn btn-danger btn-md']) }}
         {{ Form::close() }}

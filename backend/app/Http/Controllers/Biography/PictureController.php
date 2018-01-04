@@ -80,12 +80,7 @@ class PictureController extends Controller
     public function edit($picture_id)
     {
         $picture = Picture::find($picture_id);
-        $genus_id = $picture->genus_id;
-        $genus = Genus::find($picture->genus_id)->name;
-        $biomes = Biome::all();
-        $biomesArray = $picture->allBiomes();
-        $name = $picture->name;
-        return view('/Picture/edit', compact(['Picture_id', 'Picture', 'name', 'genus', 'biomes', 'biomesArray']));
+        return view('/picture/edit', compact(['picture']));
     }
 
     /**
@@ -95,7 +90,7 @@ class PictureController extends Controller
      * @param $picture_id
      * @return \Illuminate\Http\Response
      */
-    public function update(StorePicture $request, $picture_id)
+    public function update(StorePicture $request)
     {
         $requestParams = $request->all();
         return $this->repository->update($requestParams);
@@ -107,7 +102,7 @@ class PictureController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id) {
+    public function destroy($id) {
         $pictureRepository = new PictureRepository();
         $returnStatus = $pictureRepository->delete($id);
         if ($returnStatus) {

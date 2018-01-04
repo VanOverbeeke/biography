@@ -33,7 +33,7 @@ class SpeciesController extends Controller
     public function index(Request $request) {
         $requestParams = $request->all();
         $speciesList = $this->repository->index($requestParams);
-        return view('/species/index', compact(['speciesList', 'requestParams']));
+        return view('species.index', compact(['speciesList', 'requestParams']));
     }
 
     /**
@@ -88,7 +88,7 @@ class SpeciesController extends Controller
         $biomes = Biome::all();
         $biomesArray = $species->allBiomes();
         $name = $species->name;
-        return view('/species/edit', compact(['species_id', 'species', 'name', 'genus', 'biomes', 'biomesArray']));
+        return view('species.edit', compact(['species_id', 'species', 'name', 'genus', 'biomes', 'biomesArray']));
     }
 
     /**
@@ -98,7 +98,7 @@ class SpeciesController extends Controller
      * @param $species_id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreSpecies $request, $species_id)
+    public function update(StoreSpecies $request)
     {
         $requestParams = $request->all();
         return $this->repository->update($requestParams);
@@ -110,7 +110,7 @@ class SpeciesController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id) {
+    public function destroy($id) {
         $speciesRepository = new SpeciesRepository();
         $returnStatus = $speciesRepository->delete($id);
         if ($returnStatus) {

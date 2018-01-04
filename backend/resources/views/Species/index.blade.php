@@ -129,6 +129,7 @@
         <thead>
         <tr>
             <th> Edit</th>
+            <th> ID </th>
             <th> Species</th>
             <th> Age (y)</th>
             <th> Max size (m)</th>
@@ -144,6 +145,7 @@
                 <td>{{ Form::open(['route' => ['species.edit', $species->id], 'method' => 'get']) }}
                     {{ Form::submit('Edit', ['class'=>'btn btn-success btn-sm']) }}
                     {{ Form::close()}}</td>
+                <td> {{$species->id}} </td>
                 <td><a href="{{$species->wiki}}" class="species">{{$species->genus->name}} {{$species->name}}</a></td>
                 <td> {{$species->age}} </td>
                 <td> {{$species->size}} </td>

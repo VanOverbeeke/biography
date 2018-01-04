@@ -9,7 +9,7 @@
 @stop
 
 @section('body')
-    <form id="picture" action="/picture/create" method="post">
+    <form id="picture" action="/picture" method="post">
         {{ Form::model($picture, ['route'=>['picture.create',$picture->id]]) }}
         {{ csrf_field() }}
         <div class="row flex-center">
@@ -19,7 +19,7 @@
             <div class="col-md-3">
                 {{ Form::label('path', 'URL') }}
                 <br>
-                {{ Form::text('path', 'Enter picture URL here') }}
+                {{ Form::text('path', null, ['placeholder'=>'Enter picture URL here']) }}
             </div>
             <div class="col-md-3">
                 {{ Form::label('imageable_type', 'Type') }}

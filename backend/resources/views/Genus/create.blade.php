@@ -9,7 +9,7 @@
 @stop
 
 @section('body')
-    <form id="form" action="/genus/create" method="post">
+    <form id="form" action="/genus" method="post">
         {{ csrf_field() }}
         <div class="row flex-center">
             <div class="col-lg-3 col-md-5 col-sm-8 col-xs-10">
