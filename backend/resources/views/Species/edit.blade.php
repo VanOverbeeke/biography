@@ -10,13 +10,13 @@
 
 @section('body')
     {{ Form::model($species, ['route'=>['species.update', $species->id], 'method'=>'put']) }}
-    {{ csrf_field() }}
+    {{--{{ csrf_field() }}--}}
     <div class="row flex-center">
         <h2>Species</h2>
     </div>
     <div class="row flex-center">
         <div class="col-md-3 species">
-            {{ $genus }} {{ $name }}
+            {{ $species->genus->name }} {{ $species->name }}
             {{ Form::hidden('id', $species->id) }}
             {{ Form::hidden('genus_id', $species->genus_id) }}
             {{ Form::hidden('name', $species->name) }}

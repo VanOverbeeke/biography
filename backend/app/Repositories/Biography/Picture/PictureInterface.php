@@ -6,8 +6,6 @@ use App\Models\Picture;
 
 interface PictureInterface {
 
-    public function getAll();
-
     public function add(Picture $picture);
 
     public function find(int $id);

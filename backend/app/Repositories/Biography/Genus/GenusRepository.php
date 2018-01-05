@@ -9,20 +9,16 @@ use App\Http\Controllers\Controller;
 class GenusRepository implements GenusInterface
 {
 
-    public function getAllWithProps(array $properties = []) {
-        if ($properties) {
-            return Genus::select($properties)->get();
-        } else {
-            return Genus::all();
-        }
-    }
-
     public function find(int $id) {
-        return $this->find($id);
+        return $this->findOrFail($id);
     }
 
     public function add(Genus $genus) {
         $this->species[$genus->id] = $genus;
+    }
+
+    public function create() {
+        return new Genus;
     }
 
     public function delete(int $id)
@@ -30,30 +26,23 @@ class GenusRepository implements GenusInterface
         return Genus::findOrFail($id)->delete();
     }
 
-//    public function remove(int $id) {
-//        unset($this->genus['id']);
-//    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(array $requestParams)
     {
-        $sortBy = $request->has('sortBy') ? $request->get('sortBy') : 'id';
-        $filterBy = $request->has('filterBy') ? $request->get('filterBy') : 'all';
-        if($filterBy==='all') {
-            $genus = Genus::with(['species'])
-                ->get()
-                ->sortBy($sortBy);
-        } else {
-            $genus = Genus::whereHas('species', function ($query) use ($filterBy) {
-                $query->where('species.id', 'LIKE', $filterBy);
-            })
-                ->get()
-                ->sortBy($sortBy);
+        $filterBy = (isset($requestParams['filterBy'])) ? $requestParams['filterBy'] : '%';
+        $sortBy = (isset($requestParams['sortBy'])) ? $requestParams['sortBy'] : 'id';
+        $genusList = $genusList = Genus::with(['species']);
+        if (!$filterBy==='%') {
+            $genusList = $genusList->whereHas('species', function ($query) use ($filterBy) {
+                    $query->where('species.id', 'LIKE', $filterBy);
+            });
         }
-        return view('/genus/index', compact(['genus', 'sortBy', 'filterBy']));
+        $genusList = $genusList->get()->sortBy($sortBy);
+        return [$genusList, $sortBy, $filterBy];
     }
 
     /**
@@ -62,16 +51,18 @@ class GenusRepository implements GenusInterface
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(array $requestParams)
     {
-        $validatedData = $request->validate([
-            'name' => 'string|required|unique:genus|max:50',
-        ]);
         $genus = new Genus;
-        $genus->name = $validatedData->get('name');
+        $genus->fill($requestParams);
         $genus->save();
-        return response('Genus addition success!', 200)
-            ->header('Content-Type', 'text/plain');
+    }
+
+    public function update($requestParams)
+    {
+        $genus = Genus::findOrFail($requestParams['id']);
+        $genus->update($requestParams);
+        return $genus->save();
     }
 
 }

@@ -27,15 +27,6 @@ class Genus extends Model
         return $this->hasMany(Species::class);
     }
 
-    public function genusArray(){
-        $genusRepository = new GenusRepository();
-        $genusCollection = $genusRepository->getAllWithProps(['id','name']);
-        $genusArray = $genusCollection->mapWithKeys(function ($genus) {
-            return [$genus['id'] => $genus['name']];
-        });
-        return $genusArray;
-    }
-
     public function biomes() {
         $biomes = [];
         foreach ($this->species as $specie) {

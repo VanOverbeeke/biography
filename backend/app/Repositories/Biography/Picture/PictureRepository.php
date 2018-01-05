@@ -8,10 +8,6 @@ use App\Repositories\Biography\Picture\PictureInterface as PictureInterface;
 class PictureRepository implements PictureInterface
 {
 
-    public function getAll() {
-        return Picture::all();
-    }
-
     public function index(array $requestParams) {
         $pictureList = Picture::all();
         return $pictureList;
@@ -25,9 +21,19 @@ class PictureRepository implements PictureInterface
         $this->picture[$picture->id] = $picture;
     }
 
+    public function create() {
+        $picture = new Picture;
+        return $picture;
+    }
+
     public function delete(int $id)
     {
         return Picture::findOrFail($id)->delete();
+    }
+
+    public function edit($picture_id) {
+        $picture = Picture::findOrFail($picture_id);
+        return $picture;
     }
 
     public function store(array $request)
@@ -35,8 +41,10 @@ class PictureRepository implements PictureInterface
         $picture = new Picture;
         $picture->fill($request);
         $picture->save();
-        return response('Picture addition success!', 200)
-            ->header('Content-Type', 'text/plain');
+        return response(
+            '<h2>Picture addition success!</h2><h2><a href="'.route('picture.index').'">Return to index</a></h2>',
+            200)
+            ->header('Content-Type', 'text/html');
     }
 
     /**
@@ -52,8 +60,10 @@ class PictureRepository implements PictureInterface
         $picture = Picture::findOrFail($id);
         $picture->update($request);
         $picture->save();
-        return response('Picture edit success!', 200)
-            ->header('Content-Type', 'text/plain');
+        return response(
+            '<h2>Picture edit success!</h2><h2><a href="'.route('picture.index').'">Return to index</a></h2>',
+            200)
+            ->header('Content-Type', 'text/html');
     }
 
 }

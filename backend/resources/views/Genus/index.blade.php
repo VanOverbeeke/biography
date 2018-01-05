@@ -68,7 +68,7 @@
         </div>
     </div>
     <br>
-    <table id="table" class="table flex-center">
+    <table id="table" class="table table-hover flex-center">
         <thead>
         <tr>
             <th> ID </th>
@@ -76,41 +76,49 @@
             <th> Species </th>
             <th> All biomes </th>
             <th> Pictures </th>
+            <th> Delete </th>
         </tr>
         </thead>
         <tbody>
-        @foreach($genus as $genu)
-            <tr>
-                <td><a href="/genus/{{$genu->id}}">{{$genu->id}}</a></td>
+        @foreach($genusList as $genus)
+            <tr class="clickable-row" data-href="{{url('genus', $genus->id)}}">
+                <td>{{$genus->id}}</td>
+
+                <td><a class="genus">{{$genus->name}}</a></td>
                 <td>
-                    {{ Form::open(['method'=>'delete', 'route'=>['genus.destroy', $genu->id]]) }}
-                    {{ Form::hidden('id', $genu->id) }}
-                    {{ Form::submit('Delete', ['class'=>'btn btn-danger btn-sm']) }}
-                    {{ Form::close() }}
-                </td>
-                <td>{{ Form::open(['route' => ['genus.edit', $genu->id], 'method' => 'get']) }}
-                    {{ Form::submit('Edit', ['class'=>'btn btn-success btn-sm']) }}
-                    {{ Form::close()}}</td>
-                <td><a class="genus">{{$genu->name}}</a></td>
-                <td>
-                    @foreach ($genu->species as $specie)
+                    @foreach ($genus->species as $specie)
                         {{$specie->name}}{{ ($loop->last) ? '' : ',' }}
                     @endforeach
                 </td>
                 <td>
-                    @foreach ($genu->biomes() as $biome)
+                    @foreach ($genus->biomes() as $biome)
                         {{$biome}}{{ ($loop->last) ? '' : ',' }}
                     @endforeach
                 </td>
                 <td>
-                    @foreach ($genu->pictures() as $pic)
-                        <a href="{{$pic->path}}"><img src="{{$pic->path}}" width="100px" height="100px"></a>
+                    @foreach ($genus->pictures() as $pic)
+                        <a href="{{$pic->path}}" class="btn"><img src="{{$pic->path}}" width="100px" height="100px"></a>
                     @endforeach
+                </td>
+                <td>
+                    {{ Form::open(['method'=>'delete', 'route'=>['genus.destroy', $genus->id]]) }}
+                    {{ Form::hidden('id', $genus->id) }}
+                    {{ Form::submit('Delete', ['class'=>'btn btn-danger btn-sm']) }}
+                    {{ Form::close() }}
                 </td>
             </tr>
         @endforeach
         </tbody>
     </table>
+    <script>
+        $(document).ready(function($) {
+            $(".clickable-row").click(function (event) {
+                if( event.target == "[object HTMLTableCellElement]" ) {
+                    window.open($(this).data("href"));
+                }
+            });
+        });
+    </script>
 @stop
 
 @section('footer')

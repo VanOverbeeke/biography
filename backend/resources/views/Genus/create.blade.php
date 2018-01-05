@@ -9,18 +9,18 @@
 @stop
 
 @section('body')
-    <form id="form" action="/genus" method="post">
-        {{ csrf_field() }}
-        <div class="row flex-center">
-            <div class="col-lg-3 col-md-5 col-sm-8 col-xs-10">
-                <h2>Genus</h2>
-                <br>
-                <input type="string" class="form-control" id="name" name="name" placeholder="Genus name">
-            </div>
+    {{ Form::model($genus, ['route'=>['genus.store']]) }}
+    {{ csrf_field() }}
+    <div class="row flex-center">
+        <div class="col-lg-3 col-md-5 col-sm-8 col-xs-10">
+            <h2>Genus</h2>
+            <br>
+            {{ Form::text('name', null, ['class'=>'form-control', 'placeholder'=>'Genus name']) }}
         </div>
-        <br>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    </div>
+    <br>
+    {{ Form::submit('Submit', ['class'=>'btn btn-primary']) }}
+    {{ Form::close() }}
 @stop
 
 @section('footer')

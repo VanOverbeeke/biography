@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Biography;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePicture;
 use App\Models\Genus;
+use App\Models\Species;
 use App\Models\Picture;
 use App\Models\Biome;
 use App\Repositories\Biography\Picture\PictureRepository;
@@ -33,7 +34,7 @@ class PictureController extends Controller
     public function index(Request $request) {
         $requestParams = $request->all();
         $pictureList = $this->repository->index($requestParams);
-        return view('/picture/index', compact(['pictureList', 'requestParams']));
+        return view('picture.index', compact(['pictureList', 'requestParams']));
     }
 
     /**
@@ -43,8 +44,8 @@ class PictureController extends Controller
      */
     public function create()
     {
-        $picture = new Picture;
-        return view('Picture.create', compact(['picture']));
+        $picture = $this->repository->create();
+        return view('picture.create', compact(['picture']));
     }
 
     /**
@@ -67,9 +68,7 @@ class PictureController extends Controller
      */
     public function show($id)
     {
-        $pictureList = [Picture::findOrFail($id)];
-        $requestParams = [];
-        return view('picture.index', compact(['pictureList', 'requestParams']));
+        return $this->edit($id);
     }
 
     /**
@@ -80,8 +79,8 @@ class PictureController extends Controller
      */
     public function edit($picture_id)
     {
-        $picture = Picture::findOrFail($picture_id);
-        return view('/picture/edit', compact(['picture']));
+        $picture = $this->repository->edit($picture_id);
+        return view('picture.edit', compact(['picture']));
     }
 
     /**
@@ -104,30 +103,11 @@ class PictureController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        $pictureRepository = new PictureRepository();
-        $returnStatus = $pictureRepository->delete($id);
-        if ($returnStatus) {
-            return response('Picture deletion success!', 200)
-                ->header('Content-Type', 'text/plain');
-        }
-    }
-
-    /**
-     *
-     * @param $id
-     * @return mixed
-     */
-    public function readDeleted($id) {
-        $picture = Picture::withTrashed()->find($id);
-        $picture = Picture::onlyTrashed()->find($id);
-        return $picture;
-    }
-
-    public function restore($id) {
-        $picture = Picture::withTrashed()
-            ->where('id', $id)
-            ->restore();
-        return $picture;
+        $this->repository->delete($id);
+        return response(
+            '<h2>Picture deletion success!</h2><h2><a href="'.route('picture.index').'">Return to index</a></h2>',
+            200)
+            ->header('Content-Type', 'text/html');
     }
 
 }

@@ -23,10 +23,7 @@ Route::resource('picture', 'Biography\PictureController');
 /*
  * AJAX linkage
  */
-Route::get('/getSpecies', [
-    'uses' => 'Biography\GenusController@findSpecies',
-    'as' => 'species.find'
-]);
+
 Route::get('/getBiomes', [
     'uses' => 'Biography\SpeciesController@biomes',
     'as' => 'species.biomes'

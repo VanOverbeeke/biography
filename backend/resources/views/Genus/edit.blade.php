@@ -9,7 +9,7 @@
 @stop
 
 @section('body')
-    {{ Form::model($genus, ['route'=>['picture.update', $genus->id], 'method'=>'put']) }}
+    {{ Form::model($genus, ['route'=>['genus.update', $genus->id], 'method'=>'put']) }}
     {{--{{ csrf_field() }}--}}
     {{ Form::hidden('id', $genus->id) }}
 

@@ -125,12 +125,10 @@
         {{ Form::close() }}
     </div>
     <br>
-    <table id="table" class="table flex-center">
+    <table id="table" class="table table-hover flex-center">
         <thead>
             <tr>
                 <th> ID </th>
-                <th> Delete </th>
-                <th> Edit</th>
                 <th> Species</th>
                 <th> Age (y)</th>
                 <th> Max size (m)</th>
@@ -138,21 +136,13 @@
                 <th> Biome</th>
                 <th> 18S rRNA</th>
                 <th> Pictures</th>
+                <th> Delete </th>
             </tr>
         </thead>
         <tbody>
         @foreach($speciesList as $species)
-            <tr>
-                <td><a href="/species/{{$species->id}}">{{$species->id}}</a></td>
-                <td>
-                    {{ Form::open(['method'=>'delete', 'route'=>['species.destroy', $species->id]]) }}
-                    {{ Form::hidden('id', $species->id) }}
-                    {{ Form::submit('Delete', ['class'=>'btn btn-danger btn-sm']) }}
-                    {{ Form::close() }}
-                </td>
-                <td>{{ Form::open(['route' => ['species.edit', $species->id], 'method' => 'get']) }}
-                    {{ Form::submit('Edit', ['class'=>'btn btn-success btn-sm']) }}
-                    {{ Form::close()}}</td>
+            <tr class="clickable-row" data-href="{{url('species', $species->id)}}">
+                <td>{{$species->id}}</td>
                 <td><a href="{{$species->wiki}}" class="species">{{$species->genus->name}} {{$species->name}}</a></td>
                 <td> {{$species->age}} </td>
                 <td> {{$species->size}} </td>
@@ -168,12 +158,25 @@
                         <a href="{{$pic->path}}"><img src="{{$pic->path}}" width="100px" height="100px"></a>
                     @endforeach
                 </td>
+                <td>
+                    {{ Form::open(['method'=>'delete', 'route'=>['species.destroy', $species->id]]) }}
+                    {{ Form::hidden('id', $species->id) }}
+                    {{ Form::submit('Delete', ['class'=>'btn btn-danger btn-sm','style'=>'width:100%']) }}
+                    {{ Form::close() }}
+                </td>
             </tr>
         @endforeach
         </tbody>
     </table>
 
     <script>
+        $(document).ready(function($) {
+            $(".clickable-row").click(function (event) {
+                if( event.target == "[object HTMLTableCellElement]" ) {
+                    window.open($(this).data("href"));
+                }
+            });
+        });
         function getSpecies(genusID) {
             $.ajax({
                 type: "GET",

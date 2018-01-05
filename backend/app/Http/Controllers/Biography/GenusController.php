@@ -13,26 +13,29 @@ use Illuminate\Http\Response;
 class GenusController extends Controller
 {
     /**
+     * @var GenusRepository $repository
+     */
+    public $repository;
+
+    /**
+     * GenusController constructor.
+     * @param SpeciesRepository $repository
+     */
+    public function __construct(GenusRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        $sortBy = $request->has('sortBy') ? $request->get('sortBy') : 'id';
-        $filterBy = $request->has('filterBy') ? $request->get('filterBy') : 'all';
-        if($filterBy==='all') {
-            $genus = Genus::with(['species'])
-                ->get()
-                ->sortBy($sortBy);
-        } else {
-            $genus = Genus::whereHas('species', function ($query) use ($filterBy) {
-                $query->where('species.id', 'LIKE', $filterBy);
-            })
-                ->get()
-                ->sortBy($sortBy);
-        }
-        return view('genus.index', compact(['genus', 'sortBy', 'filterBy']));
+        $requestParams = $request->all();
+        [$genusList, $sortBy, $filterBy] = $this->repository->index($requestParams);
+        return view('genus.index', compact(['genusList', 'sortBy', 'filterBy']));
     }
 
     /**
@@ -42,7 +45,8 @@ class GenusController extends Controller
      */
     public function create()
     {
-        return view('genus.create');
+        $genus = $this->repository->create();
+        return view('genus.create', compact('genus'));
     }
 
     /**
@@ -53,11 +57,12 @@ class GenusController extends Controller
      */
     public function store(StoreGenus $request)
     {
-        $genus = new Genus;
-        $genus->name = $request->get('name');
-        $genus->save();
-        return response('Genus addition success!', 200)
-            ->header('Content-Type', 'text/plain');
+        $requestParams = $request->all();
+        $this->repository->store($requestParams);
+        return response(
+            '<h2>Genus addition success!</h2><h2><a href="'.route('genus.index').'">Return to index</a></h2>',
+            200)
+            ->header('Content-Type', 'text/html');
     }
 
     /**
@@ -68,10 +73,7 @@ class GenusController extends Controller
      */
     public function show($id)
     {
-        $genus = [Genus::findOrFail($id)];
-        $filterBy = 'all';
-        $sortBy = 0;
-        return view('genus.index', compact(['genus', 'sortBy', 'filterBy']));
+        return $this->edit($id);
     }
 
     /**
@@ -82,7 +84,7 @@ class GenusController extends Controller
      */
     public function edit(int $id)
     {
-        $genus = Genus::findOrFail($id);
+        $genus = $this->repository->find($id);
         return view('genus.edit', compact(['genus']));
     }
 
@@ -93,9 +95,13 @@ class GenusController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $this->repository->update($request->all());
+        return response(
+            '<h2>Genus edit success!</h2><h2><a href="'.route('genus.index').'">Return to index</a></h2>',
+            200)
+            ->header('Content-Type', 'text/html');
     }
 
     /**
@@ -106,24 +112,11 @@ class GenusController extends Controller
      */
     public function destroy($id)
     {
-        $genusRepository = new GenusRepository();
-        $returnStatus =  $genusRepository->delete($id);
-        if ($returnStatus) {
-            return response('Genus deletion success!', 200)
-                ->header('Content-Type', 'text/plain');
-        }
+        $this->repository->delete($id);
+        return response(
+            '<h2>Genus deletion success!</h2><h2><a href="'.route('genus.index').'">Return to index</a></h2>',
+            200)
+            ->header('Content-Type', 'text/html');
     }
 
-    public function findSpecies()
-    {
-        $input = Input::get('genus_id');
-        if ($input === 'None') {
-            dd('NONE passed to findSpecies in GenusController');
-        } else {
-            $genus = Genus::findOrFail($input);
-            $species = $genus->species();
-        }
-        $species = $species->get(['id','name']);
-        return $species;
-    }
 }

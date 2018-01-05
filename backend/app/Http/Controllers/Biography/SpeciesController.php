@@ -43,12 +43,8 @@ class SpeciesController extends Controller
      */
     public function create()
     {
-        $species = new Species;
-        $tempGenus = new Genus;
-        $genusArray = $tempGenus->genusArray();
-        $speciesArray = Species::all();
-        $biomes = Biome::all();
-        return view('species.create', compact(['species', 'speciesArray', 'genusArray', 'biomes']));
+        [$species, $genusArray] = $this->repository->create();
+        return view('species.create', compact(['species', 'genusArray']));
     }
 
     /**
@@ -60,7 +56,13 @@ class SpeciesController extends Controller
     public function store(StoreSpecies $request)
     {
         $requestParams = $request->all();
-        return $this->repository->store($requestParams);
+        $success = $this->repository->store($requestParams);
+        if ($success) {
+            return response(
+                '<h2>Species creation success!</h2><h2><a href="'.route('species.index').'">Return to index</a></h2>',
+                200)
+                ->header('Content-Type', 'text/html');
+        }
     }
 
     /**
@@ -71,9 +73,7 @@ class SpeciesController extends Controller
      */
     public function show($id)
     {
-        $speciesList = [Species::findOrfail($id)];
-        $requestParams = [];
-        return view('species.index', compact(['speciesList', 'requestParams']));
+        return $this->edit($id);
     }
 
     /**
@@ -84,13 +84,8 @@ class SpeciesController extends Controller
      */
     public function edit($species_id)
     {
-        $species = Species::findOrFail($species_id);
-        $genus_id = $species->genus_id;
-        $genus = Genus::findOrFail($species->genus_id)->name;
-        $biomes = Biome::all();
-        $biomesArray = $species->allBiomes();
-        $name = $species->name;
-        return view('species.edit', compact(['species_id', 'species', 'name', 'genus', 'biomes', 'biomesArray']));
+        $species = $this->repository->edit($species_id);
+        return view('species.edit', compact(['species_id', 'species']));
     }
 
     /**
@@ -103,7 +98,11 @@ class SpeciesController extends Controller
     public function update(StoreSpecies $request)
     {
         $requestParams = $request->all();
-        return $this->repository->update($requestParams);
+        $this->repository->update($requestParams);
+        return response(
+            '<h2>Species edit success!</h2><h2><a href="'.route('species.index').'">Return to index</a></h2>',
+            200)
+            ->header('Content-Type', 'text/html');
     }
 
     /**
@@ -113,30 +112,12 @@ class SpeciesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        $speciesRepository = new SpeciesRepository();
-        $returnStatus = $speciesRepository->delete($id);
-        if ($returnStatus) {
-            return response('Species deletion success!', 200)
-                ->header('Content-Type', 'text/plain');
-        }
+        $this->repository->delete($id);
+        return response(
+            '<h2>Species deletion success!</h2><h2><a href="'.route('species.index').'">Return to index</a></h2>',
+            200)
+            ->header('Content-Type', 'text/html');
     }
 
-    /**
-     *
-     * @param $id
-     * @return mixed
-     */
-    public function readDeleted($id) {
-        $species = Species::withTrashed()->find($id);
-        $species = Species::onlyTrashed()->find($id);
-        return $species;
-    }
-
-    public function restore($id) {
-        $species = Species::withTrashed()
-            ->where('id', $id)
-            ->restore();
-        return $species;
-    }
 
 }

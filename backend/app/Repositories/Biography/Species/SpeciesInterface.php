@@ -6,8 +6,6 @@ use App\Models\Species;
 
 interface SpeciesInterface {
 
-    public function getAll();
-
     public function add(Species $species);
 
     public function find(int $id);

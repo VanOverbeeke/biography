@@ -6,6 +6,7 @@ use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Models\Genus;
 use App\Models\Species;
 use App\Models\Biome;
+use App\Repositories\Biography\Genus\GenusRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
@@ -14,10 +15,6 @@ use App\Repositories\Biography\Species\SpeciesInterface as SpeciesInterface;
 
 class SpeciesRepository implements SpeciesInterface
 {
-
-    public function getAll() {
-        return Species::all();
-    }
 
     public function index(array $requestParams) {
         $species = Species::with(['biomes', 'genus']);
@@ -68,6 +65,20 @@ class SpeciesRepository implements SpeciesInterface
         return $speciesList;
     }
 
+    public function create() {
+        $species = new Species;
+        $genusCollection = Genus::select(['id','name'])->get();
+        $genusArray = $genusCollection->mapWithKeys(function ($genus) {
+            return [$genus['id'] => $genus['name']];
+        });
+        return [$species, $genusArray];
+    }
+
+    public function edit($id) {
+        $species = Species::findOrFail($id);
+        return $species;
+    }
+
     public function find(int $id) {
         return Species::findOrFail($id)->get();
     }
@@ -86,9 +97,10 @@ class SpeciesRepository implements SpeciesInterface
         $species = new Species;
         $species->fill($request);
         $species->save();
-        $species->biomes()->attach($request['biomes']);
-        return response('Species addition success!', 200)
-            ->header('Content-Type', 'text/plain');
+        if (isset($request['biomes'])) {
+            $species->biomes()->attach($request['biomes']);
+        }
+        return 1;
     }
 
     /**
@@ -103,9 +115,7 @@ class SpeciesRepository implements SpeciesInterface
         $species = Species::findOrFail($request['id']);
         $species->update($request);
         $species->save();
-        $species->biomes()->sync($request['biomes']);
-        return response('Species edit success!', 200)
-            ->header('Content-Type', 'text/plain');
+        return $species->biomes()->sync($request['biomes']);
     }
 
 }
