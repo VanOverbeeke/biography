@@ -106,14 +106,12 @@
         <div class="col-lg-4 flex-center">
             <?php $length = 0 ?>
             @foreach (array_keys($requestParams) as $input)
-                @if ($input!='sortDir')
-                    @if ($requestParams[$input] and $requestParams[$input]!='id')
-                        <?php $length = $length + 1 ?>
-                        <a type="button"
-                           class="btn btn-warning rightspaced"
-                           href="{{route('species.index', array_replace($requestParams, [$input=>null]))}}">{{$input}}
-                        </a>
-                    @endif
+                @if ($input!='sortDir' && $requestParams[$input]!='name' && $requestParams[$input])
+                    <?php $length = $length + 1 ?>
+                    <a type="button"
+                       class="btn btn-warning rightspaced"
+                       href="{{route('species.index', array_replace($requestParams, [$input=>null]))}}">{{$input}}
+                    </a>
                 @endif
             @endforeach
             @if ($length > 1)
@@ -177,45 +175,45 @@
                 }
             });
         });
-        function getSpecies(genusID) {
-            $.ajax({
-                type: "GET",
-                url: "/getSpecies",
-                data: {'genus_id': genusID},
-                success: function (data) {
-                    var species = $('#species_id');
-                    species.empty();
-
-                    species.append("<option value='None'>Select species</option>");
-                    $.each(data, function (index, element) {
-                        species.append(
-                            '<option value="' + element.id + '">' +
-                            element.name +
-                            '</option>');
-                    });
-                }
-            });
-
-            function getQueryResults(genusID) {
-                $.ajax({
-                    type: "GET",
-                    url: "/getSpecies",
-                    data: {'genus_id': genusID},
-                    success: function (data) {
-                        var species = $('#species_id');
-                        species.empty();
-
-                        species.append("<option value='None'>Select species</option>");
-                        $.each(data, function (index, element) {
-                            species.append(
-                                '<option value="' + element.id + '">' +
-                                element.name +
-                                '</option>');
-                        });
-                    }
-                });
-            }
-        }
+//        function getSpecies(genusID) {
+//            $.ajax({
+//                type: "GET",
+//                url: "/getSpecies",
+//                data: {'genus_id': genusID},
+//                success: function (data) {
+//                    var species = $('#species_id');
+//                    species.empty();
+//
+//                    species.append("<option value='None'>Select species</option>");
+//                    $.each(data, function (index, element) {
+//                        species.append(
+//                            '<option value="' + element.id + '">' +
+//                            element.name +
+//                            '</option>');
+//                    });
+//                }
+//            });
+//
+//            function getQueryResults(genusID) {
+//                $.ajax({
+//                    type: "GET",
+//                    url: "/getSpecies",
+//                    data: {'genus_id': genusID},
+//                    success: function (data) {
+//                        var species = $('#species_id');
+//                        species.empty();
+//
+//                        species.append("<option value='None'>Select species</option>");
+//                        $.each(data, function (index, element) {
+//                            species.append(
+//                                '<option value="' + element.id + '">' +
+//                                element.name +
+//                                '</option>');
+//                        });
+//                    }
+//                });
+//            }
+//        }
     </script>
 @stop
 

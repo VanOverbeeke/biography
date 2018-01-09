@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-use App\Biome;
+use App\Models\Biome;
 
 class BiomeSeeder extends Seeder
 {

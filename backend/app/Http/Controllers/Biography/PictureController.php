@@ -10,6 +10,7 @@ use App\Models\Picture;
 use App\Models\Biome;
 use App\Repositories\Biography\Picture\PictureRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PictureController extends Controller
 {
@@ -48,17 +49,6 @@ class PictureController extends Controller
         return view('picture.create', compact(['picture']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StorePicture $request)
-    {
-        $requestParams = $request->all();
-        return $this->repository->store($requestParams);
-    }
 
     /**
      * Display the specified resource.
@@ -83,6 +73,23 @@ class PictureController extends Controller
         return view('picture.edit', compact(['picture']));
     }
 
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(StorePicture $request)
+    {
+        $request = $request->all();
+        $this->repository->store($request);
+        return response(
+            '<h2>Picture addition success!</h2><h2><a href="'.route('picture.index').'">Return to index</a></h2>',
+            200)
+            ->header('Content-Type', 'text/html');
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -93,7 +100,11 @@ class PictureController extends Controller
     public function update(StorePicture $request)
     {
         $requestParams = $request->all();
-        return $this->repository->update($requestParams);
+        $this->repository->update($requestParams);
+        return response(
+            '<h2>Picture edit success!</h2><h2><a href="'.route('picture.index').'">Return to index</a></h2>',
+            200)
+            ->header('Content-Type', 'text/html');
     }
 
     /**

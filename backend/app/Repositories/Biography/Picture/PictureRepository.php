@@ -26,11 +26,6 @@ class PictureRepository implements PictureInterface
         return $picture;
     }
 
-    public function delete(int $id)
-    {
-        return Picture::findOrFail($id)->delete();
-    }
-
     public function edit($picture_id) {
         $picture = Picture::findOrFail($picture_id);
         return $picture;
@@ -40,11 +35,7 @@ class PictureRepository implements PictureInterface
     {
         $picture = new Picture;
         $picture->fill($request);
-        $picture->save();
-        return response(
-            '<h2>Picture addition success!</h2><h2><a href="'.route('picture.index').'">Return to index</a></h2>',
-            200)
-            ->header('Content-Type', 'text/html');
+        return $picture->save();
     }
 
     /**
@@ -56,14 +47,15 @@ class PictureRepository implements PictureInterface
      */
     public function update(array $request)
     {
-        $id = $request['id'];
-        $picture = Picture::findOrFail($id);
+        $picture = Picture::findOrFail($request['id']);
         $picture->update($request);
-        $picture->save();
-        return response(
-            '<h2>Picture edit success!</h2><h2><a href="'.route('picture.index').'">Return to index</a></h2>',
-            200)
-            ->header('Content-Type', 'text/html');
+        return $picture->save();
     }
+
+    public function delete(int $id)
+    {
+        return Picture::findOrFail($id)->delete();
+    }
+
 
 }

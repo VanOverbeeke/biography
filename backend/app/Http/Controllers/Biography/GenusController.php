@@ -119,4 +119,9 @@ class GenusController extends Controller
             ->header('Content-Type', 'text/html');
     }
 
+//    public function dropdown()
+//    {
+//        return $this->repository->dropdown();
+//    }
+
 }

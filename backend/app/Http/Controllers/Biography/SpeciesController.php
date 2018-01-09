@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Biography;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSpecies;
 use App\Models\Genus;
+use App\Models\Picture;
 use App\Models\Species;
 use App\Models\Biome;
 use App\Repositories\Biography\Species\SpeciesRepository;
@@ -56,13 +57,11 @@ class SpeciesController extends Controller
     public function store(StoreSpecies $request)
     {
         $requestParams = $request->all();
-        $success = $this->repository->store($requestParams);
-        if ($success) {
-            return response(
-                '<h2>Species creation success!</h2><h2><a href="'.route('species.index').'">Return to index</a></h2>',
-                200)
-                ->header('Content-Type', 'text/html');
-        }
+        $this->repository->store($requestParams);
+        return response(
+            '<h2>Species creation success!</h2><h2><a href="'.route('species.index').'">Return to index</a></h2>',
+            200)
+            ->header('Content-Type', 'text/html');
     }
 
     /**

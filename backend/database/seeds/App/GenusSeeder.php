@@ -36,5 +36,9 @@ class GenusSeeder extends Seeder
             'id' => 7,
             'name' => 'Sequoiadendron'
         ]);
+        Genus::firstOrCreate([
+            'id' => 8,
+            'name' => 'Lemur'
+        ]);
     }
 }

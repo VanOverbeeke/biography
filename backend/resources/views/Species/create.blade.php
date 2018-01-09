@@ -18,7 +18,7 @@
         <div class="col-md-3 species">
             {{ Form::label('genus_id', 'Genus or ') }}
             <a href="{{url('genus.create')}}">create new</a>
-            {{ Form::select('genus_id', $genusArray, $species->genus_id, ['class' => 'form-control', 'onchange' => 'getSpecies(value);']) }}
+            {{ Form::select('genus_id', $genusArray, $species->genus_id, ['class' => 'form-control']) }}
         </div>
         <div class="col-md-3 species">
             {{ Form::label('name', 'Species') }}
@@ -88,4 +88,5 @@
         <button type="submit" value="submit" class="btn btn-primary">Submit</button>
     </div>
     {{Form::close()}}
+
 @stop

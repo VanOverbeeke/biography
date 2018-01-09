@@ -14,6 +14,7 @@ use App\Repositories\Biography\Genus\GenusRepository;
 use App\Models\Species;
 use App\Models\Biome;
 use App\Models\Picture;
+use PhpParser\ErrorHandler\Collecting;
 
 class Genus extends Model
 {
@@ -37,8 +38,15 @@ class Genus extends Model
         return array_unique($biomes);
     }
 
-    public function pictures() {
+    public function pictures()
+    {
         return $this->morphMany('App\Models\Picture', 'imageable', 'imageable_type', 'imageable_id')->get();
+    }
+
+    public function scopeDropdown($query) {
+        return $query->select(['id','name'])->get()->mapWithKeys(function ($record) {
+            return [$record['id'] => $record['name']];
+        });
     }
 
 }

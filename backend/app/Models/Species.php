@@ -54,4 +54,10 @@ class Species extends Model
         return $this->morphMany('App\Models\Picture', 'imageable', 'imageable_type', 'imageable_id')->get();
     }
 
+    public function scopeDropdown($query) {
+        return $query->select(['id','name'])->get()->mapWithKeys(function ($record) {
+            return [$record['id'] => $record['name']];
+        });
+    }
+
 }

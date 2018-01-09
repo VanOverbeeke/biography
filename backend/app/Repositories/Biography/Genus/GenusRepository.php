@@ -65,4 +65,12 @@ class GenusRepository implements GenusInterface
         return $genus->save();
     }
 
+
+//    public function dropdown()
+//    {
+//        return Genus::select(['id','name'])->get()->mapWithKeys(function ($genus) {
+//            return [$genus['id'] => $genus['name']];
+//        });
+//    }
+
 }

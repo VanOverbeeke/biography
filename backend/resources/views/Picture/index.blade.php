@@ -9,44 +9,27 @@
 @stop
 
 @section('body')
-     <table id="table" class="table table-hover flex-center">
-        <thead>
-        <tr>
-            <th> ID</th>
-            <th> Picture</th>
-            <th> Type</th>
-            <th> ID</th>
-            <th> Name </th>
-            <th> Delete </th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($pictureList as $picture)
-            <tr class="clickable-row" data-href="{{url('picture', $picture->id)}}">
-                <td>{{$picture->id}}</td>
-                <td><a href="{{$picture->path}}"><img src="{{$picture->path}}" width="300px" height="300px"></a></td>
-                <td>{{ $picture['imageable_type'] }}</td>
-                <td>{{ $picture['imageable_id'] }}</td>
-                <td>{{ $picture->imageable->name }}</td>
-                <td>
-                    {{ Form::open(['method'=>'delete', 'route'=>['picture.destroy', $picture->id]]) }}
-                    {{ Form::hidden('id', $picture->id) }}
-                    {{ Form::submit('Delete', ['class'=>'btn btn-danger btn-sm']) }}
-                    {{ Form::close() }}
-                </td>
-            </tr>
-        @endforeach
-        </tbody>
-     </table>
-     <script>
-         $(document).ready(function($) {
-             $(".clickable-row").click(function (event) {
-                 if( event.target == "[object HTMLTableCellElement]" ) {
-                     window.open($(this).data("href"));
-                 }
-             });
-         });
-     </script>
+
+     <br>
+     <div class="row flex-center">
+         <div class="col-lg-10">
+             <div class="card-deck">
+                 @foreach($pictureList as $picture)
+                     <div class="card mt-4" style="width: 18rem;">
+                         <a href="{{$picture->path}}"><img class="card-img-top" src="{{$picture->path}}" alt="Image not found"></a>
+                         <div class="card-block">
+                             <h5 class="card-title">{{ $picture['imageable_type'] }}: <br><br> {{ \App\Models\Genus::whereId($picture->imageable['genus_id'])->get()->first()['name'] }} {{ $picture->imageable['name'] }}</h5>
+                             <p class="card-text"> Picture ID: {{$picture->id}} </p>
+                             {{ Form::open(['method'=>'delete', 'route'=>['picture.destroy', $picture->id]]) }}
+                             {{ Form::hidden('id', $picture->id) }}
+                             {{ Form::submit('Delete', ['class'=>'btn btn-danger btn-lg']) }}
+                             {{ Form::close() }}
+                         </div>
+                     </div>
+                 @endforeach
+             </div>
+         </div>
+     </div>
 @stop
 
 @section('footer')

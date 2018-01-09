@@ -14,8 +14,22 @@ html, body {
 }
 footer {
     position: fixed;
-    top: 8px;
-    left: 0;
+    top: 18px;
+    left: 10px;
+}
+.top-right {
+    position: fixed;
+    right: 10px;
+    top: 18px;
+}
+.links > a {
+    color: #636b6f;
+    padding: 0 25px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1rem;
+    text-decoration: none;
+    text-transform: uppercase;
 }
 .m-b-md {
     margin-bottom: 30px;
@@ -50,11 +64,7 @@ footer {
 .position-ref {
     position: relative;
 }
-.top-right {
-    position: absolute;
-    right: 10px;
-    top: 18px;
-}
+
 .content {
     text-align: center;
     font-weight: 600;
@@ -72,15 +82,6 @@ footer {
     text-decoration: none;
     text-transform: uppercase;
 }
-.links > a {
-    color: #636b6f;
-    padding: 0 25px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .1rem;
-    text-decoration: none;
-    text-transform: uppercase;
-}
 hr {
     display: block;
     margin-top: 4px;
@@ -93,6 +94,9 @@ hr {
 .rightspaced {
     margin-bottom: 6px;
     margin-right: 2px;
+}
+.strong {
+    font-weight: bold;
 }
 .light {
     font-weight: 100;
@@ -112,4 +116,12 @@ hr {
 }
 .clickable-row {
     cursor: pointer;
+}
+.card {
+    height: 25rem;
+    width: 20rem;
+}
+.card-img-top {
+    max-height: 12rem;
+    width: 17rem;
 }

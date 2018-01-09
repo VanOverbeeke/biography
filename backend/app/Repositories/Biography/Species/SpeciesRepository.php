@@ -66,13 +66,13 @@ class SpeciesRepository implements SpeciesInterface
     }
 
     public function create() {
-        $species = new Species;
-        $genusCollection = Genus::select(['id','name'])->get();
-        $genusArray = $genusCollection->mapWithKeys(function ($genus) {
-            return [$genus['id'] => $genus['name']];
-        });
-        return [$species, $genusArray];
-    }
+    $species = new Species;
+    $genusCollection = Genus::select(['id','name'])->get();
+    $genusArray = $genusCollection->mapWithKeys(function ($genus) {
+        return [$genus['id'] => $genus['name']];
+    });
+    return [$species, $genusArray];
+}
 
     public function edit($id) {
         $species = Species::findOrFail($id);

@@ -11,7 +11,8 @@ class StoreSpecies extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json($validator->failed(), 422));
+
+        throw new HttpResponseException(response()->json(array_values($validator->getMessageBag()->getMessages()), 422));
     }
 
     public function authorize()
@@ -21,7 +22,7 @@ class StoreSpecies extends FormRequest
 
     public function messages()
     {
-        $messages = [
+        return [
             'string' => 'The :attribute must be of type string.',
             'max' => 'The :attribute must have a max length of :max.',
             'required' => 'The :attribute is required.',
@@ -30,12 +31,11 @@ class StoreSpecies extends FormRequest
             'numeric' => 'The :attribute must be of type numeric with maximum two decimal points.',
             'exists' => 'The :attribute must have an existing value.',
         ];
-        return $messages;
     }
 
     public function rules()
     {
-        $rules = [
+        return [
             'name' => 'string|required|max:50',
             'genus_id' => 'required|exists:genus,id',
             'wiki' => 'nullable|url',
@@ -44,6 +44,5 @@ class StoreSpecies extends FormRequest
             'weight' => 'nullable|numeric',
             'rrna' => 'nullable|string|max:2000'
         ];
-        return $rules;
     }
 }
