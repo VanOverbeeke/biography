@@ -20,7 +20,13 @@
                 <div>
                     Name: {{$user->name}}
                     <br>
-                    E-mail:{{$user->email}}
+                    E-mail: {{$user->email}}
+                    <br>
+                    Role id: {{$user->role_id}}
+                    <br>
+                    Role: {{$user->role()->first()->name}}
+                    <br>
+                    Admin: {{($user->isAdmin()) ?  'true' : 'false'}}
                 </div>
             </div>
         </div>

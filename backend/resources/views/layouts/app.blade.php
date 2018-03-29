@@ -26,6 +26,7 @@
                         {{ Form::submit('LOG OUT', ['class'=>'btn']) }}
                     @else
                         <a href="{{ route('login') }}">Login</a>
+                        <br>
                         <a href="{{ route('register') }}">Register</a>
                     @endauth
                 </div>

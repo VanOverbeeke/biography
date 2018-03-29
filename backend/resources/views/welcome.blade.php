@@ -24,4 +24,5 @@
     <h1>Pictures</h1>
     <a href="{{route('picture.index')}}">Index</a>
     <a href="{{route('picture.create')}}">New</a>
+
 @stop

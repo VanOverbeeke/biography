@@ -11,9 +11,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/admin', 'AdminController@index');
+
 Route::get('/contact', function () {
     return view('contact');
 });
+
+/*
+ * Authentication built-ins
+ */
+Auth::routes();
+Route::get('/home', 'HomeController@index')->name('home');
 
 /*
  * Resources
@@ -37,6 +45,3 @@ Route::get('/getMetrics', [
 ]);
 
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');

@@ -39,6 +39,28 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('role_id') ? ' has-error' : '' }}">
+                            <label for="role_id" class="col-md-4 control-label">Role</label>
+
+                            <div class="col-md-6">
+                                {{--<input id="role_id" type="number" class="form-control" name="role_id" value="{{ old('role_id') }}" required>--}}
+                                <select id="role_id" class="form-control" name="role_id" placeholder="Select user role" required>
+                                    @foreach (\App\Role::dropdown() as $role_id=>$role_name)
+                                        @if ($role_name === 'User')
+                                            <option value="{{$role_id}}" selected>{{$role_name}}</option>
+                                        @else
+                                            <option value="{{$role_id}}">{{$role_name}}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('role_id'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('role_id') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <label for="password" class="col-md-4 control-label">Password</label>
 
