@@ -1,4 +1,2 @@
 # biography
-Bioinformatics app
-
-Scrapbook of old PHP/HTML/CSS bits.
+Scrapbook for old PHP/HTML/CSS bits.
